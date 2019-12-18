@@ -1,0 +1,52 @@
+---
+output:
+  pdf_document:
+    keep_tex: true
+    fig_caption: true
+    template: ms/svm-latex-ms.tex
+title:  |
+    | Title: '**National forest inventory and snow avalanche analysis.**' 
+bibliography: ms/references.bib
+csl: "ms/journal-of-ecology.csl"
+citation-abbreviations: "ms/abbreviations.json"
+author:
+- name: Georges Kunstler^1^,  Thomas Cordonnier^1^.
+- affiliation: ^1^*Univ. Grenoble Alpes, INRAE, LESSEM, 2 rue de la Papeterie-BP 76, F-38402 St-Martin-d'Hères, France.* 
+abstract: |
+    | **Abstract** 
+    | 1. TODO.
+keywords: | 
+    | "Avalanche; disturbance; coexistence"
+    | *Corresponding author*: Georges Kunstler, georges.kunstler@irstea.fr, +33 4 76 76 27 61,  2 Rue de la Papeterie, 38402 Saint-Martin-d'Heres
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+geometry: margin=1in
+fontfamily: mathpazo
+fontsize: 11pt
+colorlinks: true
+---
+
+
+```{r, results="hide", echo=FALSE, message=FALSE}
+knitr::opts_chunk$set(tidy=FALSE, warning=FALSE, message=FALSE,
+                      error=FALSE, fig.cap="")
+require(bibtex)
+options(citation_format = "text", max.names=2, digits=1, width = 400)
+require(pander)
+require(rgdal)
+require(rgeos)
+require(sp)
+```
+
+# Introduction 
+
+TODO [@Fox-2013]. 
+
+```{r plot}
+library(drake)
+loadd(zetude)
+plot(zetude)
+```
+
+
+# REFERENCES
+

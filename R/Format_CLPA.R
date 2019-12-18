@@ -73,3 +73,67 @@ format_cycle2_CLPA  <- function(zetude, zont, lint, zonpi, linpi, wzon,
 
   return(as.data.frame(pointbuff_placetteC2))
 }
+
+
+## get species C3 C2
+
+species_C3_C2  <- function(path_sp = file.path("data", "IFN_ALL", "IFNCYCLE3",
+                                         "speciesnames.txt")){
+  speciesC3 <- data.table::fread(path_sp)
+  return(speciesC3)
+}
+
+
+species_C4  <- function(file_sp = file.path("data", "IFN_ALL", "IFNCYCLE4",
+                                         "species.csv")){
+  speciesC4 <- data.table::fread(file_sp)
+  return(speciesC4)
+}
+
+
+## alive tree
+
+trees_C4  <- function(list_all){
+    treesC4 <- list_all$arbresVivants
+    return(treesC4)
+}
+
+
+trees_C3  <- function(file_trees = file.path("data", "IFN_ALL", "IFNCYCLE3",
+                                          "arbres2.txt")){
+    treesC3 <- data.table::fread(file_trees)
+    return(treesC3)
+}
+
+
+trees_C2_csv  <- function(path_trees = file.path("data", "IFN_ALL",
+                                                 "IFNCYCLE2")){
+    tt  <-  grep("xls", list.files(path_trees),
+                 value = TRUE)
+    print(tt)
+    list_arbre  <- lapply(tt, function( nn) {
+                              read_excel(enc2native(file.path("data", "IFN_ALL",
+                                                   "IFNCYCLE2", nn)),
+                                         sheet = "Arbre", skip = 5,
+                                         col_types = c("text", "text",
+                                                      "numeric", "text",
+                                                      "text", "text",
+                                                      "text", "numeric",
+                                                      "text", "numeric",
+                                                      "numeric", "numeric",
+                                                      "numeric", "numeric",
+                                                      "numeric", "numeric",
+                                                      "numeric", "numeric"))})
+
+    arbreC2 <- dplyr::bind_rows(list_arbre)
+    write.csv(arbreC2, file = file.path("data", "IFN_ALL",
+                                        "IFNCYCLE2", "arbresC2.csv"),
+              row.names = FALSE)
+}    
+
+trees_C2  <- function(file_trees = file.path("data", "IFN_ALL",
+                                             "IFNCYCLE2", "arbresC2.csv")){
+    treesC2 <- data.table::fread(file_trees)
+    return(treesC2)
+}    
+

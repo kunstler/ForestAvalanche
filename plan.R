@@ -42,19 +42,37 @@ plan <- drake_plan(
                                                "IFNCYCLE3", "xy.txt"))),
    plot_IFN2_CLPA = format_cycle2_CLPA(zetude, zont, lint, zonpi, linpi, wzon,
                    path_plot = file_in(file.path("data", "IFN_ALL",
-                                                 "IFNCYCLE2")))
+                                                 "IFNCYCLE2"))),
+   speciesC32 = species_C3_C2(file_in(file.path("data", "IFN_ALL", "IFNCYCLE3",
+                                                "speciesnames.txt"))),
+   speciesC4 = species_C4(file_in(file.path("data", "IFN_ALL", "IFNCYCLE4",
+                                            "species.csv"))),
+   treesC4 = trees_C4(list_all),
+   treesC3 = trees_C3(file_in(file.path("data", "IFN_ALL", "IFNCYCLE3",
+                                        "arbres2.txt"))),
+   treesC2 = trees_C2(),
+   ms = rmarkdown::render(
+    knitr_in("ms.Rmd"),
+    output_file = file_out("ms.pdf"),
+    quiet = TRUE)
   )
 
-### TDO
 
-# - species
-# - tree   
-#
 
+
+# Make plan
 make(plan)
 
 config <- drake_config(plan)
 vis_drake_graph(config)
+
+
+
+### TODO
+
+# - tree   
+# - merge tree and plot
+
 
 ## open_traits:
 ##     command: extract_public_trait(sps, wright2004, wright2017, maire, chave, zanne, choat)
