@@ -1,4 +1,4 @@
-Read_French_NFI <- function(path){
+read_french_NFI <- function(path){
     # Chargement des "packages" utiles
     require(data.table)
     require(stringr)
