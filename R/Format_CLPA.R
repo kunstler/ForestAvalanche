@@ -40,8 +40,9 @@ format_cycle3_CLPA  <- function(zetude, zont, lint, zonpi, linpi, wzon,
   pointbuff_plac3N$CODE_zonpi <- over(pointbuff_plac3N, zonpi[, "CODE"])
   pointbuff_plac3N$CODE_linpi <- over(pointbuff_plac3N, linpi[, "CODE"])
   pointbuff_plac3N$CODE_wzon <- over(pointbuff_plac3N, wzon[, "CODE"])
-
-  return(as.data.frame(pointbuff_plac3N))
+  bb <- coordinates(pointbuff_plac3N)
+  return(data.frame(xl93 = bb[, 1], yl93 = bb[, 2],
+                    data.frame(as.data.frame(pointbuff_plac3N))))
 }
 
 
@@ -70,8 +71,9 @@ format_cycle2_CLPA  <- function(zetude, zont, lint, zonpi, linpi, wzon,
   pointbuff_placetteC2$CODE_zonpi <- over(pointbuff_placetteC2, zonpi[, "CODE"])
   pointbuff_placetteC2$CODE_linpi <- over(pointbuff_placetteC2, linpi[, "CODE"])
   pointbuff_placetteC2$CODE_wzon <- over(pointbuff_placetteC2, wzon[, "CODE"])
-
-  return(as.data.frame(pointbuff_placetteC2))
+  bb <- coordinates(pointbuff_placetteC2)
+  return(data.frame(xl93 = bb[, 1], yl93 = bb[, 2],
+                    data.frame(as.data.frame(pointbuff_placetteC2))))
 }
 
 

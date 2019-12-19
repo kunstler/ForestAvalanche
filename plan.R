@@ -11,7 +11,7 @@ require(dplyr)
 require(drake)
 
 # source
-lapply(list.files("R"), function(x) source(file.path("R", x)))
+lapply(grep("R$", list.files("R"), value = TRUE), function(x) source(file.path("R", x)))
 
 ### plan
 
@@ -54,25 +54,21 @@ plan <- drake_plan(
    ms = rmarkdown::render(
     knitr_in("ms.Rmd"),
     output_file = file_out("ms.pdf"),
-    quiet = TRUE)
+    quiet = TRUE),
+   spvecC4 = unique(as.vector(na.exclude(gsub("_", " ", speciesC4$Latin_name)))),
+   traitsC4 = extract_public_trait(spvecC4, wright2004, wright2017, maire,
+                                   chave, zanne, choat)
   )
-
-
-
 
 # Make plan
 make(plan)
 
+# plot plan
 config <- drake_config(plan)
 vis_drake_graph(config)
 
-
-
 ### TODO
 
-# - tree   
 # - merge tree and plot
+# - compute plots CWM mean and sd of trait per traits and multi traits (based on basal area)?
 
-
-## open_traits:
-##     command: extract_public_trait(sps, wright2004, wright2017, maire, chave, zanne, choat)

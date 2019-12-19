@@ -1,6 +1,5 @@
 ## read and traits extraction
 
-
 extractNatAd <- function(spsel, TRYdata, trait){
 if(sum(grepl(spsel, TRYdata$AccSpeciesName, useBytes = TRUE) &
        TRYdata$TraitID %in% trait &
@@ -103,7 +102,7 @@ extract_one_trait <- function(var, spsel2, df){
     genus_sel<- unique(get_genus(spsel2))
     genus<- get_genus(df$Binomial[!is.na(df[[var]])])
     if(sum(grepl(genus_sel, genus)) >0){
-    res[[var]] <- NA#mean(df[!is.na(df[[var]]), ][grepl(genus_sel, genus), var], na.rm = TRUE)
+    res[[var]] <- mean(df[!is.na(df[[var]]), ][grepl(genus_sel, genus), var], na.rm = TRUE)
     res[[2]] <- "YES"
     }else{
     res[[var]] <- NA
@@ -134,8 +133,8 @@ res <- select(res, sp, everything())
 
 
 ## function extract all data
-extract_public_trait <- function(sps, wright2004, wright2017, maire, chave, zanne, choat){
-    spvec <- sps$sp
+extract_public_trait <- function(spvec, wright2004, wright2017,
+                                 maire, chave, zanne, choat){
 extract_wright2004 <- bind_rows(lapply(spvec,extract_traits, wright2004,
                                       vars = c("leaflifespan", "lma", "n.mass",
                                                "n.area", "p.mass", "p.area")))
@@ -160,50 +159,50 @@ data_leaf_W<- extract_maire[, c("sp", "SLA", "SLA_GenusM",
                                      "Narea", "Narea_GenusM",
                                      "Nmass", "Nmass_GenusM")]
 names(data_leaf_W) <- paste0(names(data_leaf_W), "_W")
-data_m <- left_join(data_leaf, data_leaf_W, by = c("sp" = "sp_W"))
+data_m <- dplyr::left_join(data_leaf, data_leaf_W, by = c("sp" = "sp_W"))
 #get species level from both data keeping Wright as more data
 data_m <- data_m %>% mutate(SLA2 = case_when(SLA_GenusM == "NO" & !is.na(SLA_GenusM) ~ SLA,
-                                             SLA_GenusM == "YES" & !is.na(SLA_GenusM) &
-                                             SLA_GenusM_W== "NO" & !is.na(SLA_GenusM_W) ~ SLA_W,
-                                             SLA_GenusM == "YES" & !is.na(SLA_GenusM) &
-                                             SLA_GenusM_W== "YES" & !is.na(SLA_GenusM_W) ~ SLA,
-                                             is.na(SLA_GenusM) & !is.na(SLA_GenusM_W) ~ SLA_W,
-                                             is.na(SLA_GenusM) & is.na(SLA_GenusM_W) ~ SLA),
-                            SLA2_GenusM= case_when(SLA_GenusM == "NO" & !is.na(SLA_GenusM) ~ SLA_GenusM,
-                                             SLA_GenusM == "YES" & !is.na(SLA_GenusM) &
-                                             SLA_GenusM_W== "NO" & !is.na(SLA_GenusM_W) ~ SLA_GenusM_W,
-                                             SLA_GenusM == "YES" & !is.na(SLA_GenusM) &
-                                             SLA_GenusM_W== "YES" & !is.na(SLA_GenusM_W) ~ SLA_GenusM,
-                                             is.na(SLA_GenusM) & !is.na(SLA_GenusM_W) ~ SLA_GenusM_W,
-                                             is.na(SLA_GenusM) & is.na(SLA_GenusM_W) ~ SLA_GenusM),
-                            Narea2 = case_when(Narea_GenusM == "NO" & !is.na(Narea_GenusM) ~ Narea,
-                                             Narea_GenusM == "YES" & !is.na(Narea_GenusM) &
-                                             Narea_GenusM_W== "NO" & !is.na(Narea_GenusM_W) ~ Narea_W,
-                                             Narea_GenusM == "YES" & !is.na(Narea_GenusM) &
-                                             Narea_GenusM_W== "YES" & !is.na(Narea_GenusM_W) ~ Narea,
-                                             is.na(Narea_GenusM) & !is.na(Narea_GenusM_W) ~ Narea_W,
-                                             is.na(Narea_GenusM) & is.na(Narea_GenusM_W) ~ Narea),
-                            Narea2_GenusM= case_when(Narea_GenusM == "NO" & !is.na(Narea_GenusM) ~ Narea_GenusM,
-                                             Narea_GenusM == "YES" & !is.na(Narea_GenusM) &
-                                             Narea_GenusM_W== "NO" & !is.na(Narea_GenusM_W) ~ Narea_GenusM_W,
-                                             Narea_GenusM == "YES" & !is.na(Narea_GenusM) &
-                                             Narea_GenusM_W== "YES" & !is.na(Narea_GenusM_W) ~ Narea_GenusM,
-                                             is.na(Narea_GenusM) & !is.na(Narea_GenusM_W) ~ Narea_GenusM_W,
-                                             is.na(Narea_GenusM) & is.na(Narea_GenusM_W) ~ Narea_GenusM),
-                            Nmass2 = case_when(Nmass_GenusM == "NO" & !is.na(Nmass_GenusM) ~ Nmass,
-                                             Nmass_GenusM == "YES" & !is.na(Nmass_GenusM) &
-                                             Nmass_GenusM_W== "NO" & !is.na(Nmass_GenusM_W) ~ Nmass_W,
-                                             Nmass_GenusM == "YES" & !is.na(Nmass_GenusM) &
-                                             Nmass_GenusM_W== "YES" & !is.na(Nmass_GenusM_W) ~ Nmass,
-                                             is.na(Nmass_GenusM) & !is.na(Nmass_GenusM_W) ~ Nmass_W,
-                                             is.na(Nmass_GenusM) & is.na(Nmass_GenusM_W) ~ Nmass),
-                            Nmass2_GenusM= case_when(Nmass_GenusM == "NO" & !is.na(Nmass_GenusM) ~ Nmass_GenusM,
-                                             Nmass_GenusM == "YES" & !is.na(Nmass_GenusM) &
-                                             Nmass_GenusM_W== "NO" & !is.na(Nmass_GenusM_W) ~ Nmass_GenusM_W,
-                                             Nmass_GenusM == "YES" & !is.na(Nmass_GenusM) &
-                                             Nmass_GenusM_W== "YES" & !is.na(Nmass_GenusM_W) ~ Nmass_GenusM,
-                                             is.na(Nmass_GenusM) & !is.na(Nmass_GenusM_W) ~ Nmass_GenusM_W,
-                                             is.na(Nmass_GenusM) & is.na(Nmass_GenusM_W) ~ Nmass_GenusM))
+                            SLA_GenusM == "YES" & !is.na(SLA_GenusM) &
+                            SLA_GenusM_W== "NO" & !is.na(SLA_GenusM_W) ~ SLA_W,
+                            SLA_GenusM == "YES" & !is.na(SLA_GenusM) &
+                            SLA_GenusM_W== "YES" & !is.na(SLA_GenusM_W) ~ SLA,
+                            is.na(SLA_GenusM) & !is.na(SLA_GenusM_W) ~ SLA_W,
+                            is.na(SLA_GenusM) & is.na(SLA_GenusM_W) ~ SLA),
+           SLA2_GenusM= case_when(SLA_GenusM == "NO" & !is.na(SLA_GenusM) ~ SLA_GenusM,
+                            SLA_GenusM == "YES" & !is.na(SLA_GenusM) &
+                            SLA_GenusM_W== "NO" & !is.na(SLA_GenusM_W) ~ SLA_GenusM_W,
+                            SLA_GenusM == "YES" & !is.na(SLA_GenusM) &
+                            SLA_GenusM_W== "YES" & !is.na(SLA_GenusM_W) ~ SLA_GenusM,
+                            is.na(SLA_GenusM) & !is.na(SLA_GenusM_W) ~ SLA_GenusM_W,
+                            is.na(SLA_GenusM) & is.na(SLA_GenusM_W) ~ SLA_GenusM),
+           Narea2 = case_when(Narea_GenusM == "NO" & !is.na(Narea_GenusM) ~ Narea,
+                            Narea_GenusM == "YES" & !is.na(Narea_GenusM) &
+                            Narea_GenusM_W== "NO" & !is.na(Narea_GenusM_W) ~ Narea_W,
+                            Narea_GenusM == "YES" & !is.na(Narea_GenusM) &
+                            Narea_GenusM_W== "YES" & !is.na(Narea_GenusM_W) ~ Narea,
+                            is.na(Narea_GenusM) & !is.na(Narea_GenusM_W) ~ Narea_W,
+                            is.na(Narea_GenusM) & is.na(Narea_GenusM_W) ~ Narea),
+           Narea2_GenusM= case_when(Narea_GenusM == "NO" & !is.na(Narea_GenusM) ~ Narea_GenusM,
+                            Narea_GenusM == "YES" & !is.na(Narea_GenusM) &
+                            Narea_GenusM_W== "NO" & !is.na(Narea_GenusM_W) ~ Narea_GenusM_W,
+                            Narea_GenusM == "YES" & !is.na(Narea_GenusM) &
+                            Narea_GenusM_W== "YES" & !is.na(Narea_GenusM_W) ~ Narea_GenusM,
+                            is.na(Narea_GenusM) & !is.na(Narea_GenusM_W) ~ Narea_GenusM_W,
+                            is.na(Narea_GenusM) & is.na(Narea_GenusM_W) ~ Narea_GenusM),
+           Nmass2 = case_when(Nmass_GenusM == "NO" & !is.na(Nmass_GenusM) ~ Nmass,
+                            Nmass_GenusM == "YES" & !is.na(Nmass_GenusM) &
+                            Nmass_GenusM_W== "NO" & !is.na(Nmass_GenusM_W) ~ Nmass_W,
+                            Nmass_GenusM == "YES" & !is.na(Nmass_GenusM) &
+                            Nmass_GenusM_W== "YES" & !is.na(Nmass_GenusM_W) ~ Nmass,
+                            is.na(Nmass_GenusM) & !is.na(Nmass_GenusM_W) ~ Nmass_W,
+                            is.na(Nmass_GenusM) & is.na(Nmass_GenusM_W) ~ Nmass),
+           Nmass2_GenusM= case_when(Nmass_GenusM == "NO" & !is.na(Nmass_GenusM) ~ Nmass_GenusM,
+                            Nmass_GenusM == "YES" & !is.na(Nmass_GenusM) &
+                            Nmass_GenusM_W== "NO" & !is.na(Nmass_GenusM_W) ~ Nmass_GenusM_W,
+                            Nmass_GenusM == "YES" & !is.na(Nmass_GenusM) &
+                            Nmass_GenusM_W== "YES" & !is.na(Nmass_GenusM_W) ~ Nmass_GenusM,
+                            is.na(Nmass_GenusM) & !is.na(Nmass_GenusM_W) ~ Nmass_GenusM_W,
+                            is.na(Nmass_GenusM) & is.na(Nmass_GenusM_W) ~ Nmass_GenusM))
 leaf <- data_m[, c("sp", "SLA2", "Narea2", "Nmass2", "SLA2_GenusM", "Narea2_GenusM", "Nmass2_GenusM")]
 names(leaf) <- c("sp", "SLA", "Narea", "Nmass", "SLA_GenusM", "Narea_GenusM", "Nmass_GenusM")
 ## Pinus uncinata Handa et al. Ecology 2005 SLA cm2 / g (41.3 41.6 )/2 = 41.45 => 41.45/10 m2 per kg;
@@ -258,7 +257,8 @@ extract_choat <- bind_rows(lapply(spvec,extract_traits, choat,
                                       "Psi_50_safety_margin", "Psi_88_safety_margin")))
 extract_choat[extract_choat$GenusM != "NO", -c(1,8)]<-  NA
 # merge all
-df <- cbind(leaf[, c("sp", "SLA", "Narea", "Nmass", "SLA_GenusM", "Narea_GenusM", "Nmass_GenusM")],
+df <- cbind(leaf[, c("sp", "SLA", "Narea", "Nmass", "SLA_GenusM",
+                     "Narea_GenusM", "Nmass_GenusM")],
             extract_wright2017[, -1],
             extract_chave[, -1],
             extract_zanne[, -1],

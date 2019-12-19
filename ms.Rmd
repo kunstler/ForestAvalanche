@@ -44,7 +44,34 @@ TODO [@Fox-2013].
 ```{r plot}
 library(drake)
 loadd(zetude)
+loadd(zont)
+loadd(lint)
+loadd(plot_IFN4_CLPA)
+loadd(plot_IFN3_CLPA)
+loadd(plot_IFN2_CLPA)
+
 plot(zetude)
+plot(zont, add = TRUE)
+plot(lint, add = TRUE, col = "red")
+
+coordinates(plot_IFN4_CLPA) =~ xl93+yl93
+proj4string(plot_IFN4_CLPA) <- proj4string(zetude)
+coordinates(plot_IFN3_CLPA) =~ xl93+yl93
+proj4string(plot_IFN3_CLPA) <- proj4string(zetude)
+coordinates(plot_IFN2_CLPA) =~ xl93+yl93
+proj4string(plot_IFN2_CLPA) <- proj4string(zetude) 
+
+# second plot with NFI plots locations
+plot(zetude)
+points(plot_IFN4_CLPA, cex = 0.1, col = "red")
+
+plot(zetude)
+points(plot_IFN3_CLPA, cex = 0.05, col = "green")
+
+plot(zetude)
+points(plot_IFN2_CLPA, cex = 0.05, col = "blue")
+
+
 ```
 
 
