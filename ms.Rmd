@@ -20,7 +20,6 @@ keywords: |
     | *Corresponding author*: Georges Kunstler, georges.kunstler@irstea.fr, +33 4 76 76 27 61,  2 Rue de la Papeterie, 38402 Saint-Martin-d'Heres
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 geometry: margin=1in
-fontfamily: mathpazo
 fontsize: 11pt
 colorlinks: true
 ---
