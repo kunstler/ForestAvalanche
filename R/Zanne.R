@@ -10,6 +10,6 @@ process_zanne_2010 <- function(filename) {
   for (i in names(df)[3:ncol(df)]) {
     df[[i]] <- as.numeric(df[[i]])
   }
-  df
+  return(df)
 }
 

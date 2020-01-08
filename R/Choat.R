@@ -14,5 +14,4 @@ for (i in c("PI50", "PI88", "Psi_min_midday", "Psi_min",
  d[[i]]<- as.numeric(d[[i]])
  }
 return(d)
-
 }
