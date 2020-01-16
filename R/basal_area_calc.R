@@ -5,7 +5,7 @@
 ###### en début de plan drake
 
 #Donnée du cycle 4
-BA_C4_calcul <- function(data = treesC4){
+BA_C4_calcul <- function(data = treesCLPA_C4){
   
   require(dplyr)
   require(tidyr)
@@ -25,7 +25,7 @@ BA_C4_calcul <- function(data = treesC4){
 }
 
 # Donnée du cycle 3
-BA_C3_calcul <- function(data = treesC3){
+BA_C3_calcul <- function(data = treesCLPA_C3){
   
   require(dplyr)
   require(tidyr)
@@ -46,18 +46,11 @@ BA_C3_calcul <- function(data = treesC3){
 
 
 # Données du cycle 2
-BA_C2_calcul <- function(data = treesC2){
+BA_C2_calcul <- function(data = treesCLPA_C2){
   
   require(dplyr)
   require(tidyr)
   
-  names(data) <- c("CODE_DEP","DEPARTEMENT","CYCLE","ANNEE_DE_REFERENCE",
-                   "IDENTIFIANT_DU_POINT","NUMERO_ARBRE","CODE_ESSENCE",
-                   "CODE_SOUS-UNITE","CODE_DOM","AGE","CIRCONFERENCE_A_LA_SOUCHE_(cm)",
-                   "DIAMETRE_A_1.30_m_(cm)","HAUTEUR_TOTALE_(m)",
-                   "ACCROISSEMENT_RADIAL_IR5_(mm)","ACCROISSEMENT_RADIAL_IR10_(mm)",
-                   "VOLUME_HORS_REBUT_(m^2)","ACCROISSEMENT_DE_L'ARBRE_(m^2/an)",
-                   "PONDERATION")
   
   data$basal_area_w <- (((data[,12]*10^-2)^2)*3.14 / 4 ) * data[,18]
   
