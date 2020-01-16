@@ -57,8 +57,14 @@ plan <- drake_plan(
     quiet = TRUE),
    spvecC4 = unique(as.vector(na.exclude(gsub("_", " ", speciesC4$Latin_name)))),
    traitsC4 = extract_public_trait(spvecC4, wright2004, wright2017, maire,
-                                   chave, zanne, choat)
-  )
+                                   chave, zanne, choat),
+   treesCLPA_C2 = trees_CLPA_C2(treesC2,plot_IFN2_CLPA),
+   treesCLPA_C3 = trees_CLPA_C3(treesC3,plot_IFN3_CLPA),
+   treesCLPA_C4 = trees_CLPA_C4(treesC4,plot_IFN4_CLPA),
+   basal_area_C2 = BA_C2_calcul(treesCLPA_C2),
+   basal_area_C3 = BA_C3_calcul(treesCLPA_C3),
+   basal_area_C4 = BA_C4_calcul(treesCLPA_C4)
+   )
 
 # Make plan
 make(plan)
