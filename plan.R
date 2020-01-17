@@ -63,7 +63,18 @@ plan <- drake_plan(
    treesCLPA_C4 = trees_CLPA_C4(treesC4,plot_IFN4_CLPA),
    basal_area_C2 = BA_C2_calcul(treesCLPA_C2),
    basal_area_C3 = BA_C3_calcul(treesCLPA_C3),
-   basal_area_C4 = BA_C4_calcul(treesCLPA_C4)
+   basal_area_C4 = BA_C4_calcul(treesCLPA_C4),
+   essence_C2 = format_cycle2_essence(file.path("data", "IFN_ALL","IFNCYCLE2"),
+                                      basal_area_C2),
+   stem_nb_C4 = stem_number_C4(treesCLPA_C4),
+   stem_nb_C3 = stem_number_C3(treesCLPA_C3),
+   stem_nb_C2 = stem_number_C2(essence_C2),
+   DQ_C4 = root_mean_square(basal_area_C4,stem_nb_C4),
+   DQ_C3 = root_mean_square(basal_area_C3,stem_nb_C3),
+   DQ_C2 = root_mean_square(basal_area_C2,stem_nb_C2),
+   Cv_C2 = var_coef_C2(treesCLPA_C2),
+   Cv_C3 = var_coef_C3(treesCLPA_C3),
+   Cv_C4 = var_coef_C4(treesCLPA_C4)
    )
 
 # Make plan
