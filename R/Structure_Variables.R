@@ -128,7 +128,7 @@ var_coef_C3 <- function(selected_trees){
   require(tidyr)
   
   
-  selected_trees$diametre_pond <-  selected_trees$C13/3.14 * selected_trees$POND
+  selected_trees$diametre_pond <-  selected_trees$C13/pi * selected_trees$POND
   
   CV_C3 <- selected_trees %>% dplyr::group_by(CPP, ESS) %>% 
     dplyr::summarise(sigma = sd(diametre_pond), µ = mean(diametre_pond))
@@ -164,7 +164,7 @@ var_coef_C4 <- function(selected_trees){
 
 root_mean_square <- function(G, N){
   
-  DQ_calc <- 2/sqrt(3.14) * sqrt(G[,c(2:length(G))]/N[,c(2:length(N))])
+  DQ_calc <- 2/sqrt(pi) * sqrt(G[,c(2:length(G))]/N[,c(2:length(N))])
   
   DQ_calc[,length(G)] <- G[,1]
   DQ_calc <- DQ_calc[,c(length(DQ_calc),1:(length(DQ_calc)-1))]
