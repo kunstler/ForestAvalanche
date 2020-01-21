@@ -112,10 +112,10 @@ var_coef_C2 <- function(selected_trees){
   
   selected_trees$diametre_pond <-  selected_trees$DIAMETRE_A_1.30_m_cm * 10^-2 * selected_trees$PONDERATION
   
-  CV_C2 <- selected_trees %>% dplyr::group_by(IDENTIFIANT_DU_POINT, CODE_ESSENCE) %>% 
+  CV_C2 <- selected_trees %>% dplyr::group_by(IDENTIFIANT_DU_POINT) %>% 
     dplyr::summarise(sigma = sd(diametre_pond), µ = mean(diametre_pond))
     CV_C2$Coef_var_diam <- CV_C2$sigma / CV_C2$µ 
-    CV_C2 <-  CV_C2[,c(1,2,5)] %>% tidyr::spread(CODE_ESSENCE, Coef_var_diam )
+    CV_C2 <-  CV_C2[,c(1,4)]
     
   return(CV_C2)
 }
@@ -130,10 +130,10 @@ var_coef_C3 <- function(selected_trees){
   
   selected_trees$diametre_pond <-  selected_trees$C13/pi * selected_trees$POND
   
-  CV_C3 <- selected_trees %>% dplyr::group_by(CPP, ESS) %>% 
+  CV_C3 <- selected_trees %>% dplyr::group_by(CPP) %>% 
     dplyr::summarise(sigma = sd(diametre_pond), µ = mean(diametre_pond))
   CV_C3$Coef_var_diam <- CV_C3$sigma / CV_C3$µ 
-  CV_C3 <-  CV_C3[,c(1,2,5)] %>% tidyr::spread(ESS, Coef_var_diam )
+  CV_C3 <-  CV_C3[,c(1,4)] 
   
   return(CV_C3)
 }
@@ -149,10 +149,10 @@ var_coef_C4 <- function(selected_trees){
   
   selected_trees$diametre_pond <-  selected_trees$c13/pi * selected_trees$w
   
-  CV_C4 <- selected_trees %>% dplyr::group_by(idp, espar) %>% 
+  CV_C4 <- selected_trees %>% dplyr::group_by(idp) %>% 
     dplyr::summarise(sigma = sd(diametre_pond), µ = mean(diametre_pond))
   CV_C4$Coef_var_diam <- CV_C4$sigma / CV_C4$µ 
-  CV_C4 <-  CV_C4[,c(1,2,5)] %>% tidyr::spread(espar, Coef_var_diam )
+  CV_C4 <-  CV_C4[,c(1,4)]
   
   return(CV_C4)
 }
@@ -164,11 +164,12 @@ var_coef_C4 <- function(selected_trees){
 
 root_mean_square <- function(G, N){
   
-  DQ_calc <- 2/sqrt(pi) * sqrt(G[,c(2:length(G))]/N[,c(2:length(N))])
+  DQ_calc <- 2/sqrt(pi) * sqrt(G[,length(G)]/N[,length(N)])
   
-  DQ_calc[,length(G)] <- G[,1]
-  DQ_calc <- DQ_calc[,c(length(DQ_calc),1:(length(DQ_calc)-1))]
-    
+  DQ_calc[,2] <- G[,1]
+  DQ_calc <- DQ_calc[,c(2,1)]
+  names(DQ_calc) <- c("idp","RMS_diam")
+  
   return(DQ_calc)
 }
   
