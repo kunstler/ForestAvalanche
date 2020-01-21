@@ -41,7 +41,7 @@ stem_number_C4 <- function(selected_trees){
   stem_nb_C4 <- selected_trees %>% dplyr::group_by(idp, espar) %>% 
     dplyr::summarise(stem_nb = sum(w)) %>% 
     tidyr::spread(espar, stem_nb)
-    
+  stem_nb_C4[is.na(stem_nb_C4)] <-  0  
   
   stem_nb_C4_tot <- selected_trees %>% dplyr::group_by(idp) %>% 
     dplyr::summarise(stem_nb_tot = sum(w))
@@ -61,7 +61,7 @@ stem_number_C3 <- function(selected_trees){
   stem_nb_C3 <- selected_trees %>% dplyr::group_by(CPP, ESS) %>% 
     dplyr::summarise(stem_nb = sum(POND)) %>% 
     tidyr::spread(ESS, stem_nb)
-  
+  stem_nb_C3[is.na(stem_nb_C3)] <-  0
   
   stem_nb_C3_tot <- selected_trees %>% dplyr::group_by(CPP) %>% 
     dplyr::summarise(stem_nb_tot = sum(POND))
@@ -81,7 +81,7 @@ stem_number_C2 <- function(selected_trees){
   stem_nb_C2 <- selected_trees %>% dplyr::group_by(IDENTIFIANT_DU_POINT, CODE_ESSENCE) %>% 
     dplyr::summarise(stem_nb = sum(NOMBRE_DE_TIGES)) %>% 
     tidyr::spread(CODE_ESSENCE, stem_nb)
-    
+  stem_nb_C2[is.na(stem_nb_C2)] <-  0   
     
   stem_nb_C2_tot <- selected_trees %>% dplyr::group_by(IDENTIFIANT_DU_POINT) %>% 
     dplyr::summarise(stem_nb_tot = sum(NOMBRE_DE_TIGES))

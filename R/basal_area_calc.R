@@ -15,6 +15,7 @@ BA_C4_calcul <- function(selected_trees){
   BA_C4 <- selected_trees %>% dplyr::group_by(idp, espar) %>% 
     dplyr::summarise(spe_basal_area = sum(basal_area_w)) %>% 
     tidyr::spread(espar, spe_basal_area)
+  BA_C4[is.na(BA_C4)] <-  0
   
   BA_C4_tot <- selected_trees %>% dplyr::group_by(idp) %>% 
     dplyr::summarise(basal_area_tot = sum(basal_area_w))
@@ -35,6 +36,7 @@ BA_C3_calcul <- function(selected_trees){
   BA_C3 <- selected_trees %>% dplyr::group_by(CPP, ESS) %>% 
     dplyr::summarise(spe_basal_area = sum(basal_area_w)) %>% 
     tidyr::spread(ESS, spe_basal_area)
+  BA_C3[is.na(BA_C3)] <-  0
   
   BA_C3_tot <- selected_trees %>% dplyr::group_by(CPP) %>% 
     dplyr::summarise(basal_area_tot = sum(basal_area_w))
@@ -57,6 +59,7 @@ BA_C2_calcul <- function(selected_trees){
   BA_C2 <- selected_trees %>% dplyr::group_by(IDENTIFIANT_DU_POINT,CODE_ESSENCE) %>% 
     dplyr::summarise(spe_basal_area = sum(basal_area_w)) %>% 
     tidyr::spread(CODE_ESSENCE, spe_basal_area)
+  BA_C2[is.na(BA_C2)] <-  0
   
   BA_C2_tot <- selected_trees %>% dplyr::group_by(IDENTIFIANT_DU_POINT) %>% 
     dplyr::summarise(basal_area_tot = sum(basal_area_w))
