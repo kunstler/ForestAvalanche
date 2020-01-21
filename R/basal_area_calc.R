@@ -10,7 +10,7 @@ BA_C4_calcul <- function(selected_trees){
   require(dplyr)
   require(tidyr)
   
-  selected_trees$basal_area_w <- ((selected_trees$c13*10^-2)^2 / (4*3.14) ) * as.numeric(as.character(selected_trees$w))
+  selected_trees$basal_area_w <- ((selected_trees$c13*10^-2)^2 / (4*pi) ) * as.numeric(as.character(selected_trees$w))
   
   BA_C4 <- selected_trees %>% dplyr::group_by(idp, espar) %>% 
     dplyr::summarise(spe_basal_area = sum(basal_area_w)) %>% 
@@ -30,7 +30,7 @@ BA_C3_calcul <- function(selected_trees){
   require(dplyr)
   require(tidyr)
   
-  selected_trees$basal_area_w <- (selected_trees$C13^2 / (4*3.14) ) * selected_trees$POND
+  selected_trees$basal_area_w <- (selected_trees$C13^2 / (4*pi) ) * selected_trees$POND
   
   BA_C3 <- selected_trees %>% dplyr::group_by(CPP, ESS) %>% 
     dplyr::summarise(spe_basal_area = sum(basal_area_w)) %>% 
@@ -52,7 +52,7 @@ BA_C2_calcul <- function(selected_trees){
   require(tidyr)
   
   
-  selected_trees$basal_area_w <- (((selected_trees[,12]*10^-2)^2)*3.14 / 4 ) * selected_trees[,18]
+  selected_trees$basal_area_w <- (((selected_trees[,12]*10^-2)^2)*pi / 4 ) * selected_trees[,18]
   
   BA_C2 <- selected_trees %>% dplyr::group_by(IDENTIFIANT_DU_POINT,CODE_ESSENCE) %>% 
     dplyr::summarise(spe_basal_area = sum(basal_area_w)) %>% 

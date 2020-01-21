@@ -147,7 +147,7 @@ var_coef_C4 <- function(selected_trees){
   
   selected_trees$w <- as.numeric(as.character(selected_trees$w))
   
-  selected_trees$diametre_pond <-  selected_trees$c13/3.14 * selected_trees$w
+  selected_trees$diametre_pond <-  selected_trees$c13/pi * selected_trees$w
   
   CV_C4 <- selected_trees %>% dplyr::group_by(idp, espar) %>% 
     dplyr::summarise(sigma = sd(diametre_pond), µ = mean(diametre_pond))
