@@ -72,8 +72,10 @@ format_cycle2_CLPA  <- function(zetude, zont, lint, zonpi, linpi, wzon,
   pointbuff_placetteC2$CODE_linpi <- over(pointbuff_placetteC2, linpi[, "CODE"])
   pointbuff_placetteC2$CODE_wzon <- over(pointbuff_placetteC2, wzon[, "CODE"])
   bb <- coordinates(pointbuff_placetteC2)
-  return(data.frame(xl93 = bb[, 1], yl93 = bb[, 2],
-                    data.frame(as.data.frame(pointbuff_placetteC2))))
+  data_final <- data.frame(xl93 = bb[, 1], yl93 = bb[, 2],
+                           data.frame(as.data.frame(pointbuff_placetteC2)))
+  names(data_final) <- c("xl93","yl93","CODE_DEP","DEPARTEMENT","CYCLE","ANNEE_DE_REFERENCE","IDENTIFIANT_DU_POINT","CODE_REGD", "CODE_REGN","CODE_PRA", "CODE_SFOR","CODE_COMP", "ESSENCE_PRINCIPALE","ESSENCE_PRINCIPALE_DU_TAILLIS", "NATURE_DE_LA_COUPE","DETAIL_DE_LA_COUPE","COUVERTURE_DU_SOL_AU_CYCLE_PRECEDENT","UTILISATION_DU_SOL_AU_CYCLE_PRECEDENT","DENSITE_GLOBALE_DE_REGENERATION","SURFACE_D_EXTENSION_DU_POINT__ha","CODE_zonpi","CODE_linpi","CODE_wzon")
+  return(data_final)
 }
 
 
@@ -136,6 +138,13 @@ trees_C2_csv  <- function(path_trees = file.path("data", "IFN_ALL",
 trees_C2  <- function(file_trees = file.path("data", "IFN_ALL",
                                              "IFNCYCLE2", "arbresC2.csv")){
     treesC2 <- data.table::fread(file_trees)
+    names(treesC2) <- c("CODE_DEP","DEPARTEMENT","CYCLE","ANNEE_DE_REFERENCE",
+                        "IDENTIFIANT_DU_POINT","NUMERO_ARBRE","CODE_ESSENCE",
+                        "CODE_SOUS-UNITE","CODE_DOM","AGE","CIRCONFERENCE_A_LA_SOUCHE_cm",
+                        "DIAMETRE_A_1.30_m_cm","HAUTEUR_TOTALE_m",
+                        "ACCROISSEMENT_RADIAL_IR5_mm","ACCROISSEMENT_RADIAL_IR10_mm",
+                        "VOLUME_HORS_REBUT_m^2","ACCROISSEMENT_DE_L'ARBRE_m^2.an^-1",
+                        "PONDERATION")
     return(treesC2)
 }    
 
