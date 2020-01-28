@@ -60,8 +60,8 @@ plan <- drake_plan(
    spvecC32 = unique(as.vector(na.exclude(gsub("_", " ", str_to_title(speciesC32$SPECIES))))),
    traitsC4 = extract_public_trait(spvecC4, wright2004, wright2017, maire,
                                    chave, zanne, choat),
-   traitsC32 <- extract_public_trait(spvecC32, wright2004, wright2017, maire,
-                                     chave, zanne, choat),
+   traitsC32 = extract_public_trait(spvecC32, wright2004, wright2017, maire,
+                                      chave, zanne, choat),
    treesCLPA_C2 = trees_CLPA_C2(treesC2,plot_IFN2_CLPA),
    treesCLPA_C3 = trees_CLPA_C3(treesC3,plot_IFN3_CLPA),
    treesCLPA_C4 = trees_CLPA_C4(treesC4,plot_IFN4_CLPA),
@@ -90,6 +90,5 @@ vis_drake_graph(config)
 
 ### TODO
 
-# - merge tree and plot
 # - compute plots CWM mean and sd of trait per traits and multi traits (based on basal area)?
 
