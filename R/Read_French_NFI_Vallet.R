@@ -48,17 +48,21 @@ read_french_NFI <- function(path){
         file.path(path, ListZip), ListFichEcologie, SIMPLIFY = F)
     # Creation des data.table
     arbresVivants <- rbindlist(ListArbresVivants, fill=T);
-    setkey(arbresVivants, "idp")
+    arbresVivants$espar  <- as.character(arbresVivants$espar)
+    arbresVivants$espar[ arbresVivants$espar == "2"] <- "02"
+    arbresVivants$espar[ arbresVivants$espar == "3"] <- "03"
+    arbresVivants$espar[ arbresVivants$espar == "4"] <- "04"
+    arbresVivants$espar[ arbresVivants$espar == "5"] <- "05"
+    arbresVivants$espar[ arbresVivants$espar == "6"] <- "06"
+    arbresVivants$espar[ arbresVivants$espar == "7"] <- "07"
+    arbresVivants$espar[ arbresVivants$espar == "9"] <- "09"
     arbresMorts <- rbindlist(ListArbresMorts, fill=T);
-    setkey(arbresMorts, "idp")
     #flore <- rbindlist(ListFlore); setkey(flore, "idp")
     placette <- rbindlist(ListPlacette, fill=T)
     names(placette)[names(placette)=="tm2"]<-"tm_2"
     placette$annee <- floor(placette$idp/100000)+ 5
     ecologie <- rbindlist(ListEcologie, fill=T)
 
-    tt  <-  list(arbresVivants, arbresMorts,
-                 placette, ecologie)
     return(list("arbresVivants" = arbresVivants, "arbresMorts" = arbresMorts,
                 "placette" = placette, "ecologie" = ecologie))
 }
