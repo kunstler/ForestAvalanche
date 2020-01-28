@@ -6,6 +6,7 @@
 require(rgdal)
 require(rgeos)
 require(sp)
+require(stringr)
 require(readxl)
 require(dplyr)
 require(drake)
@@ -56,14 +57,17 @@ plan <- drake_plan(
     output_file = file_out("ms.pdf"),
     quiet = TRUE),
    spvecC4 = unique(as.vector(na.exclude(gsub("_", " ", speciesC4$Latin_name)))),
+   spvecC32 = unique(as.vector(na.exclude(gsub("_", " ", str_to_title(speciesC32$SPECIES))))),
    traitsC4 = extract_public_trait(spvecC4, wright2004, wright2017, maire,
                                    chave, zanne, choat),
+   traitsC32 <- extract_public_trait(spvecC32, wright2004, wright2017, maire,
+                                     chave, zanne, choat),
    treesCLPA_C2 = trees_CLPA_C2(treesC2,plot_IFN2_CLPA),
    treesCLPA_C3 = trees_CLPA_C3(treesC3,plot_IFN3_CLPA),
    treesCLPA_C4 = trees_CLPA_C4(treesC4,plot_IFN4_CLPA),
-   basal_area_C2 = BA_C2_calcul(treesCLPA_C2),
-   basal_area_C3 = BA_C3_calcul(treesCLPA_C3),
-   basal_area_C4 = BA_C4_calcul(treesCLPA_C4),
+   basal_area_C2 = BA_C2_calcul(treesCLPA_C2, speciesC32),
+   basal_area_C3 = BA_C3_calcul(treesCLPA_C3, speciesC32),
+   basal_area_C4 = BA_C4_calcul(treesCLPA_C4, speciesC4),
    essence_C2 = format_cycle2_essence(file.path("data", "IFN_ALL","IFNCYCLE2"),
                                       basal_area_C2),
    stem_nb_C4 = stem_number_C4(treesCLPA_C4),
