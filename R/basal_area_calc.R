@@ -12,21 +12,21 @@ BA_C4_calcul <- function(selected_trees, data_spe){
   BA_C4 <- selected_trees %>% dplyr::group_by(idp, espar) %>% 
     dplyr::summarise(spe_basal_area = sum(basal_area_w))
   
-  data_spe <-  data_spe[,c("code","Latin_name")]
+  data_spe <-  data_spe[,c("ESPAR","Latin_Name")]
   
-  filtered_spe <- dplyr::filter(data_spe, data_spe$code %in% BA_C4$espar)
+  filtered_spe <- dplyr::filter(data_spe, data_spe$ESPAR %in% BA_C4$espar)
   filtered_spe <-  filtered_spe[!duplicated(filtered_spe)==TRUE,]
   
   
-  BA_C4_named <- dplyr::left_join(BA_C4, filtered_spe, by = c("espar" = "code"))
-  BA_C4_named[is.na(BA_C4_named$Latin_name), "Latin_name"] <- c("inconnu")
+  BA_C4_named <- dplyr::left_join(BA_C4, filtered_spe, by = c("espar" = "ESPAR"))
+  BA_C4_named[is.na(BA_C4_named$Latin_Name), "Latin_Name"] <- c("inconnu")
   for(i in (1:length(BA_C4_named[[1]]))){
-    if(BA_C4_named[i,"Latin_name"] == "inconnu"){
-      BA_C4_named[i,"Latin_name"] <- BA_C4_named[i,"espar"]
+    if(BA_C4_named[i,"Latin_Name"] == "inconnu"){
+      BA_C4_named[i,"Latin_Name"] <- BA_C4_named[i,"espar"]
     }
   }
-  BA_C4_named <-  tidyr::spread(BA_C4_named[,c("idp","Latin_name","spe_basal_area")], 
-                                Latin_name, spe_basal_area)
+  BA_C4_named <-  tidyr::spread(BA_C4_named[,c("idp","Latin_Name","spe_basal_area")], 
+                                Latin_Name, spe_basal_area)
   
   BA_C4_tot <- selected_trees %>% dplyr::group_by(idp) %>% 
     dplyr::summarise(basal_area_tot = sum(basal_area_w))

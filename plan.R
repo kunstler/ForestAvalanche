@@ -56,7 +56,7 @@ plan <- drake_plan(
     knitr_in("ms.Rmd"),
     output_file = file_out("ms.pdf"),
     quiet = TRUE),
-   spvecC4 = unique(as.vector(na.exclude(gsub("_", " ", speciesC4$Latin_name)))),
+   spvecC4 = unique(as.vector(na.exclude(gsub("_", " ", speciesC4$Latin_Name)))),
    spvecC32 = unique(as.vector(na.exclude(gsub("_", " ", str_to_title(speciesC32$SPECIES))))),
    traitsC4 = extract_public_trait(spvecC4, wright2004, wright2017, maire,
                                    chave, zanne, choat),
