@@ -113,7 +113,7 @@ var_coef_C2 <- function(selected_trees){
   selected_trees$diametre_pond <-  selected_trees$DIAMETRE_A_1.30_m_cm * 10^-2 * selected_trees$PONDERATION
   
   CV_C2 <- selected_trees %>% dplyr::group_by(IDENTIFIANT_DU_POINT) %>% 
-    dplyr::summarise(sigma = sd(diametre_pond), µ = mean(diametre_pond))
+    dplyr::summarise(sigma = sd(diametre_pond), µ = mean(diametre_pond, na.rm = TRUE))
     CV_C2$Coef_var_diam <- CV_C2$sigma / CV_C2$µ 
     CV_C2 <-  CV_C2[,c(1,4)]
     
@@ -131,7 +131,7 @@ var_coef_C3 <- function(selected_trees){
   selected_trees$diametre_pond <-  selected_trees$C13/pi * selected_trees$POND
   
   CV_C3 <- selected_trees %>% dplyr::group_by(CPP) %>% 
-    dplyr::summarise(sigma = sd(diametre_pond), µ = mean(diametre_pond))
+    dplyr::summarise(sigma = sd(diametre_pond), µ = mean(diametre_pond, na.rm = TRUE))
   CV_C3$Coef_var_diam <- CV_C3$sigma / CV_C3$µ 
   CV_C3 <-  CV_C3[,c(1,4)] 
   
@@ -150,7 +150,7 @@ var_coef_C4 <- function(selected_trees){
   selected_trees$diametre_pond <-  selected_trees$c13/pi * selected_trees$w
   
   CV_C4 <- selected_trees %>% dplyr::group_by(idp) %>% 
-    dplyr::summarise(sigma = sd(diametre_pond), µ = mean(diametre_pond))
+    dplyr::summarise(sigma = sd(diametre_pond), µ = mean(diametre_pond, na.rm = TRUE))
   CV_C4$Coef_var_diam <- CV_C4$sigma / CV_C4$µ 
   CV_C4 <-  CV_C4[,c(1,4)]
   
