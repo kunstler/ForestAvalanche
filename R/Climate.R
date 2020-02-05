@@ -1,181 +1,189 @@
-## CHELSA
-#' Download chelsa climatologies
-#'
-#' @description Download chelsa climatologies for a given variables
-#'
-#' @export
-#'
-#' @param name name of the bioclimatic variables in Bio01 to Bio19
-#' @param path path where to store the data (a 'chelsa_climatologies' directory is created to store the data')
-#' @param overwrite should you overwrite the downloaded data
-#' @param ... additional param not use for the moment
-#' @import archive raster
-download_climatologies <- function(name = "Bio01",path = '', overwrite = FALSE, ...) {
-require(archive)
-if(length(name)>1) stop("\nname must be of length one")
-if(!name %in% paste0("Bio", c(paste0("0", 1:9), 10:19)))
-    stop(paste0("\nArgument name must be in ",
-                paste(paste0("Bio", c(paste0("0", 1:9), 10:19)),
-                      collapse = ", "),
-                " see http://chelsa-climate.org/bioclim/"))
-# create dir
-path <- 'chelsa_climatologies'
-dir.create(path, showWarnings=FALSE)
+## functions to exctract or/and download climatiques variables
+## some data needs to be download manually
 
-address <- paste0('https://www.wsl.ch/lud/chelsa/data/bioclim/integer/CHELSA_bio10_',
-                  gsub("Bio","",name), "_land.7z")
-filename <- file.path(path,paste0('CHELSA_bio10_',
-                                  gsub("Bio","",name),
-                                  "_land.7z"))
-
-filename_tif<- file.path(path,paste0('CHELSA_bio10_',
-                                  as.numeric(gsub("Bio","",name)),
-                                  ".tif"))
-
-if (!file.exists(filename_tif) | overwrite) {
-  .download(address, filename)
-  if (!file.exists(filename))	{
-  	message("\nCould not download file -- perhaps it does not exist")
+extract_raster <- function(nb){
+  
+  require(raster)
+  
+  path <- file.path("data","chelsa_climatologies")
+  if(dir.exists(file.path(path,paste0('CHELSA_bio10_', nb,"_land")))) {
+    filename_tif<- file.path(path,paste0('CHELSA_bio10_', nb,"_land"),
+                             paste0('CHELSA_bio10_', nb,".tif"))
+  } else {
+    filename_tif<- file.path(path,paste0('CHELSA_bio10_', nb,".tif"))
   }
-  #unzip strange format 7z
-  #archive(filename)
-  archive_extract(filename, dir = path)
-}
-st <- raster(x= filename_tif)
-projection(st) <- "+proj=longlat +datum=WGS84"
-return(st)
-}
-
-
-
-## From package raster can we call it directly as it is a hidden function?
-.download <- function(aurl, filename) {
-	fn <- paste(tempfile(), '.download', sep='')
-	res <- utils::download.file(url=aurl, destfile=fn, method="auto",
-                                    quiet = FALSE, mode = "wb", cacheOK = TRUE)
-	if (res == 0) {
-		w <- getOption('warn')
-		on.exit(options('warn' = w))
-		options('warn'=-1)
-		if (! file.rename(fn, filename) ) {
-			# rename failed, perhaps because fn and filename refer to different devices
-			file.copy(fn, filename)
-			file.remove(fn)
-		}
-	} else {
-		stop('could not download the file' )
-	}
+  
+  st <- raster::raster(filename_tif)
+  projection(st) <- "+proj=longlat +datum=WGS84"
+  
+  e <- raster::extent(-4, 9, 40, 48)
+  st <- raster::crop(st, e)
+  
+  return(st)
 }
 
-## Function to extract aridity from http://www.cgiar-csi.org/data/global-aridity-and-pet-database
-download_aridity <- function(dir_temp = "clim_temp"){
-require(raster)
-require(R.utils)
-# download raster
-url_clim <- "https://www.dropbox.com/sh/e5is592zafvovwf/AACSS163OQ2nm5m1jmlZk4Gva/Global%20PET%20and%20Aridity%20Index/Global%20Aridity%20-%20Annual.zip?dl=1"
-raster_name_zip <- "Global Aridity - Annual.zip"
-if(!dir.exists(file.path(dir_temp, "AI_annual"))){
+
+
+
+extract_climatique <- function(dir_temp = file.path("data"),file_nb){
+  
+  require(raster)
+  
+  
+  if(!dir.exists(file.path(dir_temp,"chelsa_climatologies"))){
+    dir.create(file.path(dir_temp, "chelsa_climatologies"))
+    message("Please download data from: https://datadryad.org/stash/dataset/doi:10.5061/dryad.kd1d4 and extract them from .tar.gz format to .tif format inside chelsa_climatologies folder")
+    
+  }
+  
+  data_raster <- extract_raster(file_nb[1])
+  
+  for (nb in file_nb[-1]) {
+    raster_supl <- extract_raster(nb)
+    data_raster <- raster::stack(data_raster,raster_supl)
+  }
+  return(data_raster)
+}
+
+
+
+
+download_aridity <- function(dir_temp = file.path("data","clim_temp")){
+  require(raster)
+  require(R.utils)
+  # download raster
+  url_clim <- "https://www.dropbox.com/sh/e5is592zafvovwf/AACSS163OQ2nm5m1jmlZk4Gva/Global%20PET%20and%20Aridity%20Index/Global%20Aridity%20-%20Annual.zip?dl=1"
+  raster_name_zip <- "Global Aridity - Annual.zip"
+  if(!dir.exists(file.path(dir_temp, "AI_annual"))){
     dir.create(dir_temp)
-    download.file(url_clim, file.path(dir_temp, raster_name_zip))
-    unzip(zipfile = file.path(dir_temp, raster_name_zip),
-          exdir = dir_temp)
-}
-
-raster_aridity <- raster(file.path(dir_temp, "AI_annual",
-                                   "ai_yr",  "w001001x.adf"))
-e1 <- extent(-30, 60, 30, 80 )
-#
-res <- crop(raster_aridity, e1)
-return(res)
-}
-
-
-## Function to extract Priestley-Taylor alpha coefficient from http://www.cgiar-csi.org/data/global-high-resolution-soil-water-balance
-download_alpha <- function(dir_temp = "clim_temp"){
-require(raster)
-require(R.utils)
-# download raster
-
-url_clim <- "https://www.dropbox.com/sh/e5is592zafvovwf/AABrH65bVecLHfUcqazSnFeMa/Global%20Soil-Water%20Balance/Priestley-Taylor%20Alpha%20Coefficient.rar?dl=1"
-raster_name_zip <- "Priestley-Taylor Alpha Coefficient.rar"
-if(!dir.exists(file.path(dir_temp, "ALPHA"))){
-    dir.create(dir_temp)
-    download.file(url_clim, file.path(dir_temp, raster_name_zip))
-    system(paste0("unrar x ", dir_temp, "/'", raster_name_zip,"' ", dir_temp))
-}
-
-raster_alpha <- raster(file.path(dir_temp, "ALPHA",
-                                   "alpha",  "w001001x.adf"))
-e1 <- extent(-30, 60, 30, 80 )
-#
-res <- crop(raster_alpha, e1)
-return(res)
+    download.file(url_clim, file.path(dir_temp, raster_name_zip), mode='wb')
+    utils::unzip(zipfile = file.path(dir_temp, raster_name_zip),
+                 exdir = dir_temp)
+  }
+  
+  raster_aridity <- raster(file.path(dir_temp, "AI_annual",
+                                     "ai_yr",  "w001001x.adf"))
+  e1 <- extent(-4, 9, 40, 48)
+  #
+  res <- crop(raster_aridity, e1)
+  return(res)
 }
 
 
-# Functions to extract soil data from SoilGrid
-## TODO change for ftp://ftp.soilgrids.org/data/aggregated/1km/ for sl1 and sl2 and take the mean
 
-download_ph <- function(dir_temp = "soil_temp"){
 
-require(raster)
-require(R.utils)
-# download raster
-url_ph <- "ftp://ftp.soilgrids.org/data/aggregated/1km/PHIHOX_M_sl2_1km_ll.tif"
-raster_name <- "PHIHOX_M_sl1_1km_ll.tif"
-if(!file.exists(file.path(dir_temp, raster_name))){
-    dir.create(dir_temp)
-    download.file(url_ph, file.path(dir_temp, raster_name),mode="wb")
-}
-# load raster
-raster_ph <- raster(file.path(dir_temp, raster_name))
-e1 <- extent(-30, 60, 30, 80 )
- #
-res <- crop(raster_ph, e1)
-return(res)
-}
-
-#######################
-## Function to extract annual AET from http://www.cgiar-csi.org/data/global-high-resolution-soil-water-balance
-download_AETy <- function(dir_temp = "clim_temp"){
-require(raster)
-require(R.utils)
-# download raster
-url_clim <- "https://www.dropbox.com/sh/e5is592zafvovwf/AADpYnw-nBpeLobJEbIzb-Xla/Global%20Soil-Water%20Balance/Mean%20Annual%20AET.rar?dl=1"
-raster_name_zip <- "Mean Annual AET.rar"
-if(!dir.exists(file.path(dir_temp, "AET_YR"))){
-    dir.create(dir_temp)
-    download.file(url_clim, file.path(dir_temp, raster_name_zip))
-    system(paste0("unrar x ", dir_temp, "/'", raster_name_zip,"' ", dir_temp))
-}
-
-raster_AETy <- raster(file.path(dir_temp, "AET_YR",
-                                   "aet_yr",  "w001001x.adf"))
-e1 <- extent(-30, 60, 30, 80 )
-res <- crop(raster_AETy, e1)
-return(res)
+download_alpha <- function(dir_temp = file.path("data","clim_temp")){
+  
+  require(raster)
+  require(R.utils)
+  
+  # download raster
+  url_clim <- "https://www.dropbox.com/sh/e5is592zafvovwf/AABrH65bVecLHfUcqazSnFeMa/Global%20Soil-Water%20Balance/Priestley-Taylor%20Alpha%20Coefficient.rar?dl=1"
+  raster_name_rar <- "Priestley-Taylor_Alpha_Coefficient.rar"
+  if(!dir.exists(file.path(dir_temp, "ALPHA")) & dir.exists(file.path(dir_temp))){
+    dir.create(file.path(dir_temp, "ALPHA"))
+    download.file(url_clim, file.path(paste0(dir_temp,"/",raster_name_rar)),  mode='wb')
+    filename <- file.path(dir_temp,raster_name_rar)
+    
+    seven_zip <- shQuote('C:\\Program Files\\7-Zip\\7z') # seven-zip installation location
+    rar_file <- paste(dir_temp, '/Priestley-Taylor_Alpha_Coefficient.rar', sep = '') # rar file to unrar
+    store_file <- file.path(dir_temp,"ALPHA") # path where store your unrar file
+    cmd = paste(seven_zip, ' e ', rar_file, ' -y -o', store_file, '/', sep='')
+    
+    shell(cmd) # file extraction (runs on windows operating system, to check with other OS...) 
+  }
+  
+  raster_alpha <- raster::raster(file.path(dir_temp, "ALPHA", "w001001x.adf"))
+  e1 <- raster::extent(-4, 9, 40, 48)
+  #
+  res <- raster::crop(raster_alpha, e1)
+  return(res)
 }
 
 
-## stack data
 
-stack_list <- function(Bio01, Bio04, Bio10, Bio11, Bio15, Bio16,
-                       aridity, alpha, AETy, Ph){
-listt <- list(Bio01, Bio04, Bio10, Bio11, Bio15, Bio16)
-require(raster)
-e <- extent(-30, 60, 30, 80)
-res <- crop(raster::stack(listt), e)
-res <- raster::stack(res, aridity, alpha, AETy, Ph)
-return(res)
+
+download_AETy <- function(dir_temp = file.path("data","clim_temp")){
+  
+  require(raster)
+  require(R.utils)
+  require(sm)
+  
+  # download raster
+  if(!dir.exists(file.path(dir_temp, "AET_YR"))){
+    dir.create(file.path(dir_temp, "AET_YR"))
+    message("Please download AET_YR.rar file at https://figshare.com/articles/Global_High-Resolution_Soil-Water_Balance/7707605/3 and store it in dir_temp folder before continue")
+    message(dir_temp)
+    
+    seven_zip <- shQuote('C:\\Program Files\\7-Zip\\7z') # seven-zip installation location
+    rar_file <- paste(dir_temp, '/AET_YR.rar', sep = '') # rar file to unrar
+    store_file <- file.path(dir_temp,"AET_YR") # path where store your unrar file
+    cmd = paste(seven_zip, ' e ', rar_file, ' -y -o', store_file, '/', sep='')
+    
+    shell(cmd) # file extraction (runs on windows operating system, to check with other OS...) 
+  }
+  
+  raster_AETy <- raster::raster(file.path(dir_temp, "AET_YR",  "w001001x.adf"))
+  e1 <- raster::extent(-4, 9, 40, 48)
+  res <- raster::crop(raster_AETy, e1)
+  return(res)
 }
+
+
+
+
+extract_soil <- function(dir_temp = file.path("data","clim_temp","Soil_data"), tiff_file_name){
+  
+  require(raster)
+  require(R.utils)
+  # download ras
+  
+  # load raster
+  raster_soil <- raster(file.path(dir_temp, tiff_file_name))
+  e1 <- extent(-4, 9, 40, 48)
+  #
+  res <- crop(raster_soil, e1)
+  return(res)
+}
+
+
+stack_list_clim <- function(Bio_stack, aridity, alpha, AETy){
+  
+  require(raster)
+
+  res <- raster::stack(Bio_stack, aridity, alpha, AETy)
+  names(res) <- c("CHELSA_bio10_1","CHELSA_bio10_4",  "CHELSA_bio10_10",
+                  "CHELSA_bio10_11", "CHELSA_bio10_15", "CHELSA_bio10_16",
+                   "aridity", "alpha", "AETy")
+
+  return(res)
+}
+
+stack_list_soil <- function(Ph, CEC, OCC){
+  
+  require(raster)
+  
+  res <- raster::stack(Ph, CEC, OCC)
+  names(res) <- c("pH", "cation_exchange_capacity", "organic_carbon_content")
+  
+  return(res)
+}
+
+
 
 # EXTRACT climate
-extract_clim <- function(points, l_stack){
- val <- raster::extract(x=l_stack,y=points) # Extraction of the values
- colnames(val) <- c("Bio01", "Bio04", "Bio10", "Bio11",
-                 "Bio15", "Bio16", "aridity", "alpha", "AETy", "Ph")
- df <- cbind(data.frame(points),val)
- return(df)
+extract_clim <- function(points, clim_stack, soil_stack){
+  
+ val_clim <- raster::extract(x=clim_stack,y=points) # Extraction of the values
+ colnames(val_clim) <- c("Bio01", "Bio04", "Bio10", "Bio11",
+                 "Bio15", "Bio16", "aridity", "alpha", "AETy")
+ df <- cbind(data.frame(points),val_clim)
+ 
+ val_soil <- raster::extract(x=soil_stack,y=points) # Extraction of the values
+ colnames(val_soil) <- c("pH", "cation_exchange_capacity", "organic_carbon_content")
+ df <- cbind(data.frame(df),val_soil)
+
+  return(df)
 }
 
 
@@ -187,5 +195,36 @@ to_latlong  <- function(df){
   return(df)
 }
 
+
+
+
+
+
+clim_attrib <- function(plot_IFN2_CLPA, plot_IFN3_CLPA, plot_IFN4_CLPA){
+  
+  AETy <-  download_AETy(dir_temp = file.path("data","clim_temp"))
+  alpha <- download_alpha(dir_temp = file.path("data","clim_temp"))
+  aridity <-  download_aridity(dir_temp = file.path("data","clim_temp"))
+  Bio_stack <-  extract_climatique(dir_temp = file.path("data"),file_nb = c(1,4,10,11,15,16))
+  pH <-  extract_soil(dir_temp = file.path("data","clim_temp","Soil_data"),
+                    tiff_file_name = "PHIHOX_M_sl2_1km_France.tiff")
+  CEC <-  extract_soil(dir_temp = file.path("data","clim_temp","Soil_data"),
+                      tiff_file_name = "CECSOL_M_sl2_1km_France.tiff")
+  OCC <-  extract_soil(dir_temp = file.path("data","clim_temp","Soil_data"),
+                     tiff_file_name = "ORCDRC_M_sl2_1km_France.tiff")
+  clim_stack <-  stack_list_clim(Bio_stack, aridity, alpha, AETy)
+  soil_stack <- stack_list_soil(pH, CEC, OCC)
+  
+  pointsIFN_C2 <- to_latlong(plot_IFN2_CLPA)
+  clim_IFN_C2 <- extract_clim(pointsIFN_C2, clim_stack, soil_stack)
+  
+  pointsIFN_C3 <- to_latlong(plot_IFN3_CLPA)
+  clim_IFN_C3 <- extract_clim(pointsIFN_C3, clim_stack, soil_stack)
+  
+  pointsIFN_C4 <- to_latlong(plot_IFN4_CLPA)
+  clim_IFN_C4 <- extract_clim(pointsIFN_C4, clim_stack, soil_stack)
+  
+  return(list(clim_IFN_C2,clim_IFN_C3,clim_IFN_C4))                            
+}
 
 
