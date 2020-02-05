@@ -78,7 +78,8 @@ plan <- drake_plan(
    DQ_C2 = root_mean_square(basal_area_C2,stem_nb_C2),
    Cv_C2 = var_coef_C2(treesCLPA_C2),
    Cv_C3 = var_coef_C3(treesCLPA_C3),
-   Cv_C4 = var_coef_C4(treesCLPA_C4)
+   Cv_C4 = var_coef_C4(treesCLPA_C4),
+   clim_var = clim_attrib(plot_IFN2_CLPA,plot_IFN3_CLPA,plot_IFN4_CLPA)
    )
 
 # Make plan
