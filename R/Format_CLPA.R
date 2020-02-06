@@ -63,7 +63,7 @@ format_cycle2_CLPA  <- function(zetude, zont, lint, zonpi, linpi, wzon,
   placetteC2 <- spTransform(placetteC2, proj4string(zetude))
   # Extract clpa data
   placetteC2_subset <- placetteC2[zetude, ]
-  # add buffer of 25m around each IFN beacuase of accuracy of CLPA (~ 50m)
+  # add buffer of 25m around each IFN because of accuracy of CLPA (~ 50m)
   pointbuff_placetteC2 <- gBuffer(placetteC2_subset, width=c(25), byid=T)
   # Extract CODE from shapefile
   pointbuff_placetteC2$CODE_zont <- over(pointbuff_placetteC2, zont[, "CODE"])
@@ -74,7 +74,7 @@ format_cycle2_CLPA  <- function(zetude, zont, lint, zonpi, linpi, wzon,
   bb <- coordinates(pointbuff_placetteC2)
   data_final <- data.frame(xl93 = bb[, 1], yl93 = bb[, 2],
                            data.frame(as.data.frame(pointbuff_placetteC2)))
-  names(data_final) <- c("xl93","yl93","CODE_DEP","DEPARTEMENT","CYCLE","ANNEE_DE_REFERENCE","IDENTIFIANT_DU_POINT","CODE_REGD", "CODE_REGN","CODE_PRA", "CODE_SFOR","CODE_COMP", "ESSENCE_PRINCIPALE","ESSENCE_PRINCIPALE_DU_TAILLIS", "NATURE_DE_LA_COUPE","DETAIL_DE_LA_COUPE","COUVERTURE_DU_SOL_AU_CYCLE_PRECEDENT","UTILISATION_DU_SOL_AU_CYCLE_PRECEDENT","DENSITE_GLOBALE_DE_REGENERATION","SURFACE_D_EXTENSION_DU_POINT__ha","CODE_zont","CODE_zonpi","CODE_lint","CODE_linpi","CODE_wzon")
+  names(data_final) <- c("xl93","yl93","CODE_DEP","DEPARTEMENT","CYCLE","ANNEE_DE_REFERENCE","IDENTIFIANT_DU_POINT","CODE_REGD", "CODE_REGN","CODE_PRA", "CODE_SFOR","CODE_COMP", "ESSENCE_PRINCIPALE","ESSENCE_PRINCIPALE_DU_TAILLIS", "NATURE_DE_LA_COUPE","DETAIL_DE_LA_COUPE","COUVERTURE_DU_SOL_AU_CYCLE_PRECEDENT","UTILISATION_DU_SOL_AU_CYCLE_PRECEDENT","DENSITE_GLOBALE_DE_REGENERATION","SURFACE_D_EXTENSION_DU_POINT__ha","CODE_zont","CODE_lint","CODE_zonpi","CODE_linpi","CODE_wzon")
   return(data_final)
 }
 
