@@ -11,7 +11,7 @@ require(readxl)
 require(dplyr)
 require(drake)
 
-# source
+# source all files
 lapply(grep("R$", list.files("R"), value = TRUE), function(x) source(file.path("R", x)))
 
 ### plan
