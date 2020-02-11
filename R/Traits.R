@@ -267,3 +267,153 @@ df <- cbind(leaf[, c("sp", "SLA", "Narea", "Nmass", "SLA_GenusM",
 return(df)
 }
 
+
+
+###############################################################################################
+# function to Cycle 2 and Cycle 3 trait extraction
+
+extract_public_traitC32 <- function(spvec, wright2004, wright2017,
+                                 maire, chave, zanne, choat, species){
+  extract_wright2004 <- bind_rows(lapply(spvec,extract_traits, wright2004,
+                                         vars = c("leaflifespan", "lma", "n.mass",
+                                                  "n.area", "p.mass", "p.area")))
+  extract_maire <- bind_rows(lapply(spvec,extract_traits, maire,
+                                    vars = c("SLA", "Nmass","Narea",
+                                             "Pmass", "Parea")))
+  # MERGE BOTH
+  extract_maire$SLA <- extract_maire$SLA/10 # convert in m2 per kg
+  extract_maire$Nmass <- extract_maire$Nmass*10 # convert in mg per g
+  extract_maire$Narea <- extract_maire$Narea/1000 # convert in kg per m2
+  extract_wright2004$SLA <- (1/(extract_wright2004$lma*1000)*10000)/10 # convert in m2 per kg
+  extract_wright2004$Narea <- extract_wright2004$n.area # in kg per m2
+  extract_wright2004$Nmass <- extract_wright2004$n.mass*1000/100 # convert in mg per g
+  extract_wright2004$SLA_GenusM<- extract_wright2004$lma_GenusM
+  extract_wright2004$Narea_GenusM <- extract_wright2004$n.area_GenusM
+  extract_wright2004$Nmass_GenusM <- extract_wright2004$n.mass_GenusM
+  # get missing data in Wright2004 from Maire
+  data_leaf <- extract_wright2004[, c("sp", "SLA", "SLA_GenusM",
+                                      "Narea", "Narea_GenusM",
+                                      "Nmass", "Nmass_GenusM")]
+  data_leaf_W<- extract_maire[, c("sp", "SLA", "SLA_GenusM",
+                                  "Narea", "Narea_GenusM",
+                                  "Nmass", "Nmass_GenusM")]
+  names(data_leaf_W) <- paste0(names(data_leaf_W), "_W")
+  data_m <- dplyr::left_join(data_leaf, data_leaf_W, by = c("sp" = "sp_W"))
+  #get species level from both data keeping Wright as more data
+  data_m <- data_m %>% mutate(SLA2 = case_when(SLA_GenusM == "NO" & !is.na(SLA_GenusM) ~ SLA,
+                                               SLA_GenusM == "YES" & !is.na(SLA_GenusM) &
+                                                 SLA_GenusM_W== "NO" & !is.na(SLA_GenusM_W) ~ SLA_W,
+                                               SLA_GenusM == "YES" & !is.na(SLA_GenusM) &
+                                                 SLA_GenusM_W== "YES" & !is.na(SLA_GenusM_W) ~ SLA,
+                                               is.na(SLA_GenusM) & !is.na(SLA_GenusM_W) ~ SLA_W,
+                                               is.na(SLA_GenusM) & is.na(SLA_GenusM_W) ~ SLA),
+                              SLA2_GenusM= case_when(SLA_GenusM == "NO" & !is.na(SLA_GenusM) ~ SLA_GenusM,
+                                                     SLA_GenusM == "YES" & !is.na(SLA_GenusM) &
+                                                       SLA_GenusM_W== "NO" & !is.na(SLA_GenusM_W) ~ SLA_GenusM_W,
+                                                     SLA_GenusM == "YES" & !is.na(SLA_GenusM) &
+                                                       SLA_GenusM_W== "YES" & !is.na(SLA_GenusM_W) ~ SLA_GenusM,
+                                                     is.na(SLA_GenusM) & !is.na(SLA_GenusM_W) ~ SLA_GenusM_W,
+                                                     is.na(SLA_GenusM) & is.na(SLA_GenusM_W) ~ SLA_GenusM),
+                              Narea2 = case_when(Narea_GenusM == "NO" & !is.na(Narea_GenusM) ~ Narea,
+                                                 Narea_GenusM == "YES" & !is.na(Narea_GenusM) &
+                                                   Narea_GenusM_W== "NO" & !is.na(Narea_GenusM_W) ~ Narea_W,
+                                                 Narea_GenusM == "YES" & !is.na(Narea_GenusM) &
+                                                   Narea_GenusM_W== "YES" & !is.na(Narea_GenusM_W) ~ Narea,
+                                                 is.na(Narea_GenusM) & !is.na(Narea_GenusM_W) ~ Narea_W,
+                                                 is.na(Narea_GenusM) & is.na(Narea_GenusM_W) ~ Narea),
+                              Narea2_GenusM= case_when(Narea_GenusM == "NO" & !is.na(Narea_GenusM) ~ Narea_GenusM,
+                                                       Narea_GenusM == "YES" & !is.na(Narea_GenusM) &
+                                                         Narea_GenusM_W== "NO" & !is.na(Narea_GenusM_W) ~ Narea_GenusM_W,
+                                                       Narea_GenusM == "YES" & !is.na(Narea_GenusM) &
+                                                         Narea_GenusM_W== "YES" & !is.na(Narea_GenusM_W) ~ Narea_GenusM,
+                                                       is.na(Narea_GenusM) & !is.na(Narea_GenusM_W) ~ Narea_GenusM_W,
+                                                       is.na(Narea_GenusM) & is.na(Narea_GenusM_W) ~ Narea_GenusM),
+                              Nmass2 = case_when(Nmass_GenusM == "NO" & !is.na(Nmass_GenusM) ~ Nmass,
+                                                 Nmass_GenusM == "YES" & !is.na(Nmass_GenusM) &
+                                                   Nmass_GenusM_W== "NO" & !is.na(Nmass_GenusM_W) ~ Nmass_W,
+                                                 Nmass_GenusM == "YES" & !is.na(Nmass_GenusM) &
+                                                   Nmass_GenusM_W== "YES" & !is.na(Nmass_GenusM_W) ~ Nmass,
+                                                 is.na(Nmass_GenusM) & !is.na(Nmass_GenusM_W) ~ Nmass_W,
+                                                 is.na(Nmass_GenusM) & is.na(Nmass_GenusM_W) ~ Nmass),
+                              Nmass2_GenusM= case_when(Nmass_GenusM == "NO" & !is.na(Nmass_GenusM) ~ Nmass_GenusM,
+                                                       Nmass_GenusM == "YES" & !is.na(Nmass_GenusM) &
+                                                         Nmass_GenusM_W== "NO" & !is.na(Nmass_GenusM_W) ~ Nmass_GenusM_W,
+                                                       Nmass_GenusM == "YES" & !is.na(Nmass_GenusM) &
+                                                         Nmass_GenusM_W== "YES" & !is.na(Nmass_GenusM_W) ~ Nmass_GenusM,
+                                                       is.na(Nmass_GenusM) & !is.na(Nmass_GenusM_W) ~ Nmass_GenusM_W,
+                                                       is.na(Nmass_GenusM) & is.na(Nmass_GenusM_W) ~ Nmass_GenusM))
+  leaf <- data_m[, c("sp", "SLA2", "Narea2", "Nmass2", "SLA2_GenusM", "Narea2_GenusM", "Nmass2_GenusM")]
+  names(leaf) <- c("sp", "SLA", "Narea", "Nmass", "SLA_GenusM", "Narea_GenusM", "Nmass_GenusM")
+  ## Pinus uncinata Handa et al. Ecology 2005 SLA cm2 / g (41.3 41.6 )/2 = 41.45 => 41.45/10 m2 per kg;
+  ## N mass (1.18 +1.29)/2*1000/100 = 12.35 to convert in mg per g
+  ## Handa, I. Tanya, Christian Körner, and Stephan Hättenschwiler 2005A TEST OF THE TREELINE CARBON LIMITATION HYPOTHESIS BY IN SITU CO 2 ENRICHMENT AND DEFOLIATION. Ecology 86(5): 1288–1300.
+  leaf[leaf$sp == "Pinus uncinata", c("SLA", "Nmass")] <- c(41.45/10, 12.35)
+  leaf[leaf$sp == "Pinus uncinata", c("SLA_GenusM", "Nmass_GenusM")] <- c("NO", "NO")
+  ## Juniperus thurifera Nmass (percentage) 0.8102*10 = 8.102
+  # from Nowak-Dyjeta, Kinga, M. J. Giertych, P. Thomas, and G. Iszkuło 2017Males and Females of Juniperus Communis L. and Taxus Baccata L. Show Different Seasonal Patterns of Nitrogen and Carbon Content in Needles. Acta Physiologiae Plantarum 39(8). http://link.springer.com/10.1007/s11738-017-2489-3, accessed January 30, 2019.
+  # From PEnuelas 1999 Nmass in perc (extracted from figure 3)
+  ## mean(c(1.7890910836894416,
+  ##   1.5984539299947185,
+  ##   1.3009061040270529,
+  ##   1.3995308288005268,
+  ##   1.600956176391909)) = 1.537788
+  ## Nmass (0.8102+1.53)/2*10 = 11.7
+  leaf[leaf$sp == "Juniperus thurifera", c("Nmass")] <- c(14.2)
+  leaf[leaf$sp == "Juniperus thurifera", c("Nmass_GenusM")] <- c("NO")
+  # (6.57 +6.82 +7.69 )/3 Porte et al 2000 Ann. For. Sci.
+  leaf[leaf$sp == "Pinus pinaster", "SLA"] <- 7.026
+  leaf[leaf$sp == "Pinus pinaster", "SLA_GenusM"] <- "NO"
+  ## ## compute Narea from Nmass and SLA (m2 per kg)
+  ## leaf$Narea[is.na(leaf$Narea) &
+  ##            !is.na(leaf$SLA) &
+  ##            !is.na(leaf$Nmass)] <- leaf$Nmass[is.na(leaf$Narea) &
+  ##                                              !is.na(leaf$SLA) &
+  ##                                              !is.na(leaf$Nmass)]/(1000 *
+  ##                                                leaf$SLA[is.na(leaf$Narea) &
+  ##                                                         !is.na(leaf$SLA) &
+  ##                                                         !is.na(leaf$Nmass)])
+  # Leaf size
+  extract_wright2017 <- bind_rows(lapply(spvec,extract_traits, wright2017,
+                                         vars = c("Leaf_size_cm2",
+                                                  "Whole_leaf_size_cm2")))
+  # wood density
+  extract_chave <- bind_rows(lapply(spvec,extract_traits, as.data.frame(chave),
+                                    vars = c("Wood_density")))
+  # Quercus pubsecens  0.6426398
+  # Quercus faginea 0.8259269
+  #Castro-Diez, P., J. P. Puyravaud, J. H. C. Cornelissen, and P. Villar-Salvador. 1998. Stem anatomy and relative growth rate in seedlings of a wide range of woody plant species and types. Oecologia 116:57-66.
+  extract_chave[extract_chave$sp == "Quercus pubescens", "Wood_density"] <- 0.6426398
+  extract_chave[extract_chave$sp == "Quercus faginea", "Wood_density"] <- 0.8259269
+  extract_chave[extract_chave$sp == "Quercus pubescens", "Wood_density_GenusM"] <- "NO"
+  extract_chave[extract_chave$sp == "Quercus faginea", "Wood_density_GenusM"] <- "NO"
+  # vessel size
+  extract_zanne <- bind_rows(lapply(spvec,extract_traits, zanne,
+                                    vars = c("A_mm_2", "F_mm_2_mm_2",
+                                             "N_mm_2", "S_mm_4")))
+  # PI50
+  extract_choat <- bind_rows(lapply(spvec,extract_traits, choat,
+                                    vars = c("PI50", "PI88", "Psi_min_midday", "Psi_min",
+                                             "Psi_50_safety_margin", "Psi_88_safety_margin")))
+  extract_choat[extract_choat$GenusM != "NO", -c(1,8)]<-  NA
+  # merge all
+  df <- cbind(leaf[, c("sp", "SLA", "Narea", "Nmass", "SLA_GenusM",
+                       "Narea_GenusM", "Nmass_GenusM")],
+              extract_wright2017[, -1],
+              extract_chave[, -1],
+              extract_zanne[, -1],
+              extract_choat[, -1])
+  
+  data_spe <- species[,c("SPECIES","CODE","Latin_Name")]
+  data_spe$Latin_Name <- gsub("_", " ", str_to_title(data_spe$Latin_Name))
+  data_spe$SPECIES <- gsub("_", " ", str_to_title(data_spe$SPECIES))
+  df_temp <- left_join(data_spe[,c("CODE","Latin_Name")],df, by = c("Latin_Name" = "sp"))
+  df_temp[,c("SLA_GenusM","Narea_GenusM", "Nmass_GenusM")]
+  
+  df_temp <- df_temp %>% group_by(CODE) %>% dplyr::summarise_all(funs(mean), na.rm = TRUE)
+  
+  df_temp <- left_join(data_spe[,c("CODE","SPECIES")], df_temp, by = c("CODE" = "CODE"))
+  df_temp <- df_temp[!duplicated(df_temp)==TRUE,-3]
+  
+  return(df_temp)
+}
+
