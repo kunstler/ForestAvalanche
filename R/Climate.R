@@ -198,20 +198,21 @@ to_latlong  <- function(df){
 
 
 
-
-
 clim_attrib <- function(plot_IFN2_CLPA, plot_IFN3_CLPA, plot_IFN4_CLPA){
   
-  AETy <-  download_AETy(dir_temp = file.path("data","clim_temp"))
-  alpha <- download_alpha(dir_temp = file.path("data","clim_temp"))
-  aridity <-  download_aridity(dir_temp = file.path("data","clim_temp"))
+
   Bio_stack <-  extract_climatique(dir_temp = file.path("data"),file_nb = c(1,4,10,11,15,16))
+  aridity <-  download_aridity(dir_temp = file.path("data","clim_temp"))
+  alpha <- download_alpha(dir_temp = file.path("data","clim_temp"))
+  AETy <-  download_AETy(dir_temp = file.path("data","clim_temp"))
+  
   pH <-  extract_soil(dir_temp = file.path("data","clim_temp","Soil_data"),
                     tiff_file_name = "PHIHOX_M_sl2_1km_France.tiff")
   CEC <-  extract_soil(dir_temp = file.path("data","clim_temp","Soil_data"),
                       tiff_file_name = "CECSOL_M_sl2_1km_France.tiff")
   OCC <-  extract_soil(dir_temp = file.path("data","clim_temp","Soil_data"),
                      tiff_file_name = "ORCDRC_M_sl2_1km_France.tiff")
+  
   clim_stack <-  stack_list_clim(Bio_stack, aridity, alpha, AETy)
   soil_stack <- stack_list_soil(pH, CEC, OCC)
   
