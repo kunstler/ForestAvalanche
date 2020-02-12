@@ -197,6 +197,52 @@ to_latlong  <- function(df){
 
 
 
+# extraction des Altitudes
+#Cycle 4
+extract_alti_C4 <- function(path,plot_IFN4_CLPA,clim_IFN_C4){
+  all_alt_C4 <- read.csv(path, sep = ";")
+  all_alt_C4 <- all_alt_C4[which(all_alt_C4$idp != "NULL"),]
+  all_alt_C4$idp <- as.numeric(as.character(all_alt_C4$idp))
+  alt_C4 <- dplyr::filter(all_alt_C4, all_alt_C4$idp %in% plot_IFN4_CLPA$idp)
+  names(alt_C4) <- c("idp","altitude")
+  clim_IFN_C4 <- left_join(clim_IFN_C4,alt_C4, by = c("idp" = "idp"))
+  return(clim_IFN_C4)
+}
+
+extract_alti_C32 <- function(MNT_path = file.path("data","France_Entiere","france_mnt_2154.tif"),plot_IFN2_CLPA, plot_IFN3_CLPA, clim_IFN_C2, clim_IFN_C3 ){
+MNT_altitude_fr <- raster::raster(MNT_path)
+
+point_C2 <- plot_IFN2_CLPA
+coordinates(point_C2) =~ xl93+yl93
+proj4string(point_C2) <- CRS("+init=epsg:2154")
+point_C2 <- spTransform(point_C2, CRS(projection(MNT_altitude_fr)))
+altitude <- raster::extract(MNT_altitude_fr,point_C2)
+point_C2 <- as.data.frame(point_C2)
+clim_IFN_C2 <- cbind(clim_IFN_C2,altitude)
+
+point_C3 <- plot_IFN3_CLPA
+coordinates(point_C3) =~ xl93+yl93
+proj4string(point_C3) <- CRS("+init=epsg:2154")
+point_C3 <- spTransform(point_C3, CRS(projection(MNT_altitude_fr)))
+altitude <- raster::extract(MNT_altitude_fr,point_C3)
+point_C3 <- as.data.frame(point_C3)
+clim_IFN_C3 <- cbind(clim_IFN_C3,altitude)
+
+return(list(clim_IFN_C2,clim_IFN_C3))
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 clim_attrib <- function(plot_IFN2_CLPA, plot_IFN3_CLPA, plot_IFN4_CLPA){
   
@@ -218,14 +264,21 @@ clim_attrib <- function(plot_IFN2_CLPA, plot_IFN3_CLPA, plot_IFN4_CLPA){
   
   pointsIFN_C2 <- to_latlong(plot_IFN2_CLPA)
   clim_IFN_C2 <- extract_clim(pointsIFN_C2, clim_stack, soil_stack)
+  clim_IFN_C2 <- as.data.frame(clim_IFN_C2)
   
   pointsIFN_C3 <- to_latlong(plot_IFN3_CLPA)
   clim_IFN_C3 <- extract_clim(pointsIFN_C3, clim_stack, soil_stack)
+  clim_IFN_C3 <- as.data.frame(clim_IFN_C3)
   
   pointsIFN_C4 <- to_latlong(plot_IFN4_CLPA)
   clim_IFN_C4 <- extract_clim(pointsIFN_C4, clim_stack, soil_stack)
+  clim_IFN_C4 <- as.data.frame(clim_IFN_C4)
   
-  return(list(clim_IFN_C2,clim_IFN_C3,clim_IFN_C4))                            
+  clim_IFN_C4 <- extract_alti_C4(path = file.path("data","altitudes_exactes_C4.csv"),plot_IFN4_CLPA,clim_IFN_C4)
+  clim_IFN_C32 <- extract_alti_C32(MNT_path = file.path("data","France_Entiere","france_mnt_2154.tif"),
+                                   plot_IFN2_CLPA, plot_IFN3_CLPA, clim_IFN_C2, clim_IFN_C3)
+  
+  return(list(clim_IFN_C32[[1]],clim_IFN_C32[[2]],clim_IFN_C4))                            
 }
 
 
