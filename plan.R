@@ -30,11 +30,11 @@ plan <- drake_plan(
    zonpi = readOGR(dsn = file.path("data", "merged"), layer = "CLPA_zonpi_L93"),
    wzon = readOGR(dsn = file.path("data", "merged"), layer = "CLPA_wzon_L93"),
    lint = readOGR(dsn = file.path("data", "merged"), layer = "CLPA_lint_L93"),
-   linpi = readOGR(dsn = file.path("data", "merged"), layer = "CLPA_linpi_L93"),
+   linpi = readOGR(dsn = file.path("data", "merged"), layer = "CLPA_linpi_L93_Good"),
    list_all = read_french_NFI(file.path("data", "IFN_ALL", "IFNCYCLE4")),
    plot_IFN4_CLPA = format_cycle4_CLPA(list_all,
                                   file_in(file.path("data",
-                                                    "extracted_clpa_FM.csv"))),
+                                                    "extracted_clpa_2020.csv"))),
    plot_IFN3_CLPA = format_cycle3_CLPA(zetude, zont, lint, zonpi, linpi, wzon,
                    file_plot = file_in(file.path("data", "IFN_ALL",
                                                  "IFNCYCLE3",
@@ -65,6 +65,14 @@ plan <- drake_plan(
    treesCLPA_C2 = trees_CLPA_C2(treesC2,plot_IFN2_CLPA),
    treesCLPA_C3 = trees_CLPA_C3(treesC3,plot_IFN3_CLPA),
    treesCLPA_C4 = trees_CLPA_C4(treesC4,plot_IFN4_CLPA),
+   clim_var = clim_attrib(plot_IFN2_CLPA,plot_IFN3_CLPA,plot_IFN4_CLPA),
+   plotsC2 = plot_clean(plot_IFN2_CLPA,treesCLPA_C2,speciesC32,clim_var),
+   plotsC3 = plot_clean(plot_IFN3_CLPA,treesCLPA_C3,speciesC32,clim_var),
+   plotsC4 = plot_clean(plot_IFN4_CLPA,treesCLPA_C4,speciesC4,clim_var),
+   
+   traits_plotC2 = traits_value(treesCLPA_C2,speciesC32,traitsC32),
+   traits_plotC3 = traits_value(treesCLPA_C3,speciesC32,traitsC32),
+   traits_plotC4 = traits_value(treesCLPA_C4,speciesC4,traitsC4),
    basal_area_C2 = BA_C2_calcul(treesCLPA_C2, speciesC32),
    basal_area_C3 = BA_C3_calcul(treesCLPA_C3, speciesC32),
    basal_area_C4 = BA_C4_calcul(treesCLPA_C4, speciesC4),
@@ -78,11 +86,8 @@ plan <- drake_plan(
    DQ_C2 = root_mean_square(basal_area_C2,stem_nb_C2),
    Cv_C2 = var_coef_C2(treesCLPA_C2),
    Cv_C3 = var_coef_C3(treesCLPA_C3),
-   Cv_C4 = var_coef_C4(treesCLPA_C4),
-   clim_var = clim_attrib(plot_IFN2_CLPA,plot_IFN3_CLPA,plot_IFN4_CLPA),
-   traits_plotC2 = traits_value(treesCLPA_C2,speciesC32,traitsC32),
-   traits_plotC3 = traits_value(treesCLPA_C3,speciesC32,traitsC32),
-   traits_plotC4 = traits_value(treesCLPA_C4,speciesC4,traitsC4) 
+   Cv_C4 = var_coef_C4(treesCLPA_C4)
+ 
    )
 
 # Make plan
