@@ -70,24 +70,27 @@ plan <- drake_plan(
    plotsC3 = plot_clean(plot_IFN3_CLPA,treesCLPA_C3,speciesC32,clim_var),
    plotsC4 = plot_clean(plot_IFN4_CLPA,treesCLPA_C4,speciesC4,clim_var),
    
-   traits_plotC2 = traits_value(treesCLPA_C2,speciesC32,traitsC32),
-   traits_plotC3 = traits_value(treesCLPA_C3,speciesC32,traitsC32),
-   traits_plotC4 = traits_value(treesCLPA_C4,speciesC4,traitsC4),
-   basal_area_C2 = BA_C2_calcul(treesCLPA_C2, speciesC32),
-   basal_area_C3 = BA_C3_calcul(treesCLPA_C3, speciesC32),
-   basal_area_C4 = BA_C4_calcul(treesCLPA_C4, speciesC4),
+   trees_plotsC2 = treesCLPA_C2[treesCLPA_C2$IDENTIFIANT_DU_POINT %in% plotsC2$IDENTIFIANT_DU_POINT,],
+   trees_plotsC3 = treesCLPA_C3[treesCLPA_C3$CPP %in% plotsC3$CPP,],
+   trees_plotsC4 = treesCLPA_C4[treesCLPA_C4$idp %in% plotsC4$idp,],
+   
+   basal_area_C2 = BA_C2_calcul(trees_plotsC2, speciesC32),
+   basal_area_C3 = BA_C3_calcul(trees_plotsC3, speciesC32),
+   basal_area_C4 = BA_C4_calcul(trees_plotsC4, speciesC4),
    essence_C2 = format_cycle2_essence(file.path("data", "IFN_ALL","IFNCYCLE2"),
                                       basal_area_C2),
-   stem_nb_C4 = stem_number_C4(treesCLPA_C4),
-   stem_nb_C3 = stem_number_C3(treesCLPA_C3),
-   stem_nb_C2 = stem_number_C2(essence_C2),
+   stem_nb_C4 = stem_number_C4(trees_plotsC4, speciesC4),
+   stem_nb_C3 = stem_number_C3(trees_plotsC3, speciesC32),
+   stem_nb_C2 = stem_number_C2(trees_plotsC2, essence_C2, speciesC32),
    DQ_C4 = root_mean_square(basal_area_C4,stem_nb_C4),
    DQ_C3 = root_mean_square(basal_area_C3,stem_nb_C3),
    DQ_C2 = root_mean_square(basal_area_C2,stem_nb_C2),
-   Cv_C2 = var_coef_C2(treesCLPA_C2),
-   Cv_C3 = var_coef_C3(treesCLPA_C3),
-   Cv_C4 = var_coef_C4(treesCLPA_C4)
- 
+   Cv_C2 = var_coef_C2(trees_plotsC2),
+   Cv_C3 = var_coef_C3(trees_plotsC3),
+   Cv_C4 = var_coef_C4(trees_plotsC4),
+   traits_plotC2 = traits_value(trees_plotsC2,speciesC32,traitsC32),
+   traits_plotC3 = traits_value(trees_plotsC3,speciesC32,traitsC32),
+   traits_plotC4 = traits_value(trees_plotsC4,speciesC4,traitsC4)
    )
 
 # Make plan
