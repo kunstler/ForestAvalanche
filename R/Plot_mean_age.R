@@ -67,15 +67,15 @@ mean_age_C3 <- function(selected_trees){
 
 
 # Cycle 4
-mean_age_C4 <- function(selected_trees = treesCLPA_C4, data_spe){
+mean_age_C4 <- function(selected_trees, data_spe){
   
   require(dplyr)
   
   df_correctif <- correctif_age(data_spe, selected_trees)
   
   
-  selected_trees$idp<- factor(selected_trees$idp)
-  selected_trees$age<- as.numeric(as.character(selected_trees$age))
+  selected_trees$idp <- as.numeric(as.character(selected_trees$idp))
+  selected_trees$age <- as.numeric(as.character(selected_trees$age))
   selected_trees_cor <- right_join(selected_trees, df_correctif[,c("ESPAR","correctif_age")], by = c("espar" = "ESPAR"))
   selected_trees_cor$age_30cm <- selected_trees_cor$age + selected_trees_cor$correctif_age
   
