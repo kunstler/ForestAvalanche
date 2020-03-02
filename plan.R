@@ -81,7 +81,7 @@ plan <- drake_plan(
                                       basal_area_C2),
    stem_nb_C4 = stem_number_C4(trees_plotsC4, speciesC4),
    stem_nb_C3 = stem_number_C3(trees_plotsC3, speciesC32),
-   stem_nb_C2 = stem_number_C2(trees_plotsC2, essence_C2, speciesC32),
+   stem_nb_C2 = stem_number_C2(trees_plotsC2, speciesC32),
    DQ_C4 = root_mean_square(basal_area_C4,stem_nb_C4),
    DQ_C3 = root_mean_square(basal_area_C3,stem_nb_C3),
    DQ_C2 = root_mean_square(basal_area_C2,stem_nb_C2),

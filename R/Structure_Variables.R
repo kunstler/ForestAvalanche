@@ -105,12 +105,11 @@ stem_number_C3 <- function(selected_trees, data_spe){
 
 
 # cycle 2
-stem_number_C2 <- function(selected_trees = trees_plotsC2, essence_C2, data_spe = speciesC32){
+stem_number_C2 <- function(selected_trees = trees_plotsC2, data_spe = speciesC32){
   
   require(dplyr)
   require(tidyr)
   
-  selected_trees <- essence_C2[essence_C2$IDENTIFIANT_DU_POINT %in% selected_trees$IDENTIFIANT_DU_POINT,c("IDENTIFIANT_DU_POINT","CODE_ESSENCE","NOMBRE_DE_TIGES")]
   for(i in (1:length(selected_trees[[1]]))){
     if(selected_trees[i,"CODE_ESSENCE"] == "02"){
       selected_trees[i,"CODE_ESSENCE"] <- c(2)
@@ -128,7 +127,7 @@ stem_number_C2 <- function(selected_trees = trees_plotsC2, essence_C2, data_spe 
   data_spe <- data_spe[!duplicated(data_spe)==TRUE,]
     
   stem_nb_C2 <- selected_trees %>% dplyr::group_by(IDENTIFIANT_DU_POINT, CODE_ESSENCE) %>% 
-    dplyr::summarise(stem_nb = sum(NOMBRE_DE_TIGES)) 
+    dplyr::summarise(stem_nb = sum(PONDERATION)) 
   
   filtered_spe <- dplyr::filter(data_spe, data_spe$CODE %in% stem_nb_C2$CODE_ESSENCE)
   filtered_spe <-  filtered_spe[!duplicated(filtered_spe)==TRUE,]  
@@ -146,7 +145,7 @@ stem_number_C2 <- function(selected_trees = trees_plotsC2, essence_C2, data_spe 
   stem_nb_C2_named[is.na(stem_nb_C2_named)] <-  0   
     
   stem_nb_C2_tot <- selected_trees %>% dplyr::group_by(IDENTIFIANT_DU_POINT) %>% 
-    dplyr::summarise(stem_nb_tot = sum(NOMBRE_DE_TIGES))
+    dplyr::summarise(stem_nb_tot = sum(PONDERATION))
     
   stem_nb_C2_named$stem_nb_tot <- stem_nb_C2_tot$stem_nb_tot
     
