@@ -71,6 +71,8 @@ plot_clean <- function(plot_IFN_CLPA, selected_trees, species, clim_var){
     plots_C2_age <- dplyr::left_join(plots_C2, age, by =c("IDENTIFIANT_DU_POINT"))
     plots_C2_age_ava_path <- dplyr::left_join(plots_C2_age, ava_path[,c("IDENTIFIANT_DU_POINT","avalanche_path")], by =c("IDENTIFIANT_DU_POINT"))
     
+    plots_C2_age_ava_path$classe_age <- cut(plots_C2_age_ava_path$mean_age, seq(0,400,by = 20))
+    
     plot_return <- plots_C2_age_ava_path
     
   } else if(exists("CPP", plot_IFN_CLPA)) { 
@@ -102,6 +104,8 @@ plot_clean <- function(plot_IFN_CLPA, selected_trees, species, clim_var){
     plots_C3 <- clim_C3[which(!(clim_C3$CPP %in% idp_to_excl_C3)),]
     plots_C3_age <- dplyr::left_join(plots_C3, age, by =c("CPP" = "CPP"))
     plots_C3_age_ava_path <- dplyr::left_join(plots_C3_age, ava_path[,c("CPP","avalanche_path")], by =c("CPP"))
+    
+    plots_C3_age_ava_path$classe_age <- cut(plots_C3_age_ava_path$mean_age, seq(0,400,by = 20))
     
     plot_return <- plots_C3_age_ava_path
     
@@ -135,6 +139,8 @@ plot_clean <- function(plot_IFN_CLPA, selected_trees, species, clim_var){
     plots_C4 <- clim_C4[which(!(clim_C4$idp %in% idp_to_excl_C4)),]
     plots_C4_age <- dplyr::left_join(plots_C4, age, by =c("idp" = "idp"))
     plots_C4_age_ava_path <- dplyr::left_join(plots_C4_age, ava_path[,c("idp","avalanche_path")], by =c("idp"))
+    
+    plots_C4_age_ava_path$classe_age <- cut(plots_C4_age_ava_path$mean_age, seq(0,580,by = 20))
     
     plot_return <- plots_C4_age_ava_path
     
