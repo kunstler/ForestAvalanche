@@ -90,7 +90,10 @@ plan <- drake_plan(
    Cv_C4 = var_coef_C4(trees_plotsC4),
    traits_plotC2 = traits_value(trees_plotsC2,speciesC32,traitsC32),
    traits_plotC3 = traits_value(trees_plotsC3,speciesC32,traitsC32),
-   traits_plotC4 = traits_value(trees_plotsC4,speciesC4,traitsC4)
+   traits_plotC4 = traits_value(trees_plotsC4,speciesC4,traitsC4),
+   FD_C2 = functional_ind(traitsC32,stem_nb_C2),
+   FD_C3 = functional_ind(traitsC32,stem_nb_C3),
+   FD_C4 = functional_ind(traitsC4,stem_nb_C4)
    )
 
 # Make plan
