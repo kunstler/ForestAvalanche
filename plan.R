@@ -93,7 +93,10 @@ plan <- drake_plan(
    traits_plotC4 = traits_value(trees_plotsC4,speciesC4,traitsC4),
    FD_C2 = functional_ind(traitsC32,stem_nb_C2),
    FD_C3 = functional_ind(traitsC32,stem_nb_C3),
-   FD_C4 = functional_ind(traitsC4,stem_nb_C4)
+   FD_C4 = functional_ind(traitsC4,stem_nb_C4),
+   taxo_divC2 = taxo_ind(stem_nb_C2),
+   taxo_divC3 = taxo_ind(stem_nb_C3),
+   taxo_divC4 = taxo_ind(stem_nb_C4)
    )
 
 # Make plan
