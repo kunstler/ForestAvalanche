@@ -105,7 +105,7 @@ Attrib_heigth <- function(speciesC32, speciesC4){
   library(stringr)
   library(dplyr)
   
-  speciesC32$SPECIES <- str_to_title(speciesC32$SPECIES)
+  speciesC32$Latin_Name <- str_to_title(speciesC32$Latin_Name)
   speciesC4$Latin_Name <- str_to_title(speciesC4$Latin_Name)
   
   speciesC32_complet <- left_join(speciesC32,speciesC4[,c("ESPAR","Latin_Name")], 
