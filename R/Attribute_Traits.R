@@ -97,3 +97,28 @@ traits_value <- function(selected_trees = treesCLPA_C2, data_spe = speciesC32, t
   names(plot_spe_trait) <- clear_name
   return(plot_spe_trait)
 }
+
+
+Attrib_heigth <- function(speciesC32, speciesC4){
+  
+  library(drake)
+  library(stringr)
+  library(dplyr)
+  
+  speciesC32$SPECIES <- str_to_title(speciesC32$SPECIES)
+  speciesC4$Latin_Name <- str_to_title(speciesC4$Latin_Name)
+  
+  speciesC32_complet <- left_join(speciesC32,speciesC4[,c("ESPAR","Latin_Name")], 
+                                  by = c("Latin_Name" = "Latin_Name"))
+  
+  height <- read.csv(file.path("data", "max_height.csv"), header = TRUE, sep = ",")
+  height$sp <- gsub("sp.","",height$sp)
+  
+  Height_C4 <- left_join(speciesC4, height, by = c("ESPAR" = "sp"))
+  colnames(Height_C4) <- c("code","French_name", "Latin_Name", "mean_height","sd_mean_height", "nb_observations")
+  Height_C32 <- left_join(speciesC32_complet,height, by = c("ESPAR" = "sp"))
+  Height_C32 <- Height_C32[,c(-4,-5)]
+  colnames(Height_C32) <- c("code","SPECIES", "Latin_Name", "mean_height","sd_mean_height", "nb_observations")
+  
+  return(list(Height_C32,Height_C4))
+}

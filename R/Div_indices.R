@@ -2,7 +2,7 @@
 
 # function to cumputes functional diversity indices
 
-functional_ind <- function(traits,stem_nb){
+functional_ind <- function(traits = traitsC4, stem_nb =stem_nb_C4,height = Height_C4){
   
   require(stringr)
   require(FD)
@@ -11,8 +11,13 @@ functional_ind <- function(traits,stem_nb){
   
   if(exists("IDENTIFIANT_DU_POINT", stem_nb)){
 
+  height$SPECIES <- str_to_title(gsub("_"," ",height$SPECIES)) 
+  height_grp <- height %>% dplyr::group_by(SPECIES) %>% 
+    dplyr::summarise(mean_height_genre = mean(mean_height, na.rm = TRUE))
+  
   traits$SPECIES <- str_to_title(traits$SPECIES)
-  traits_C2 <- traits[which(traits$SPECIES %in% colnames(stem_nb)),c(2,3,4,5,9,11,13,15,17,19,21,23,25,27,31,33)]
+  traits <- left_join(traits, height_grp[,c("SPECIES","mean_height_genre")], by = c("SPECIES" = "SPECIES"))
+  traits_C2 <- traits[which(traits$SPECIES %in% colnames(stem_nb)),c(2,3,4,5,9,11,13,15,17,19,21,23,25,27,31,33,35)]
 
   row.names(traits_C2) <- traits_C2[,"SPECIES"]
   traits_C2 <- traits_C2[,c(-1)]
@@ -26,9 +31,14 @@ functional_ind <- function(traits,stem_nb){
   FD <- dbFD(traits_C2,stemnb_C2, corr = "lingoes")
 
   }  else  if(exists("CPP", stem_nb)){
+  
+  height$SPECIES <- str_to_title(gsub("_"," ",height$SPECIES)) 
+  height_grp <- height %>% dplyr::group_by(SPECIES) %>% 
+      dplyr::summarise(mean_height_genre = mean(mean_height, na.rm = TRUE))
     
   traits$SPECIES <- str_to_title(traits$SPECIES)
-  traits_C3 <- traits[which(traits$SPECIES %in% colnames(stem_nb)),c(2,3,4,5,9,11,13,15,17,19,21,23,25,27,31,33)]
+  traits <- left_join(traits, height_grp[,c("SPECIES","mean_height_genre")], by = c("SPECIES" = "SPECIES"))
+  traits_C3 <- traits[which(traits$SPECIES %in% colnames(stem_nb)),c(2,3,4,5,9,11,13,15,17,19,21,23,25,27,31,33,35)]
 
   row.names(traits_C3) <- traits_C3[,"SPECIES"]
   traits_C3 <- traits_C3[,c(-1)]
@@ -43,9 +53,14 @@ functional_ind <- function(traits,stem_nb){
 
   } else if(exists("idp", stem_nb)) {
 
-  colonneC4 <- c(2,3,4,5,9,11,13,15,17,19,21,23,25,27,31,33) -1
+  colonneC4 <- c(2,3,4,5,9,11,13,15,17,19,21,23,25,27,31,33,35) -1
+  
+  height$Latin_Name <- str_to_title(gsub("_"," ",height$Latin_Name)) 
+  height_grp <- height %>% dplyr::group_by(Latin_Name) %>% 
+    dplyr::summarise(mean_height_genre = mean(mean_height, na.rm = TRUE))
 
   traits$sp <- str_to_title(traits$sp)
+  traits <- left_join(traits, height_grp[,c("Latin_Name","mean_height_genre")], by = c("sp" = "Latin_Name"))
   traits_C4 <- traits[which(traits$sp %in% colnames(stem_nb)),colonneC4]
 
   row.names(traits_C4) <- traits_C4[,"sp"]
