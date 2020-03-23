@@ -122,3 +122,33 @@ Attrib_heigth <- function(speciesC32, speciesC4){
   
   return(list(Height_C32,Height_C4))
 }
+
+
+Attrib_seed_mass <- function(speciesC32, speciesC4){
+  
+  library(drake)
+  library(stringr)
+  library(dplyr)
+  
+  speciesC32$Latin_Name <- str_to_title(speciesC32$Latin_Name)
+  speciesC4$Latin_Name <- str_to_title(speciesC4$Latin_Name)
+  
+  speciesC32_complet <- left_join(speciesC32,speciesC4[,c("ESPAR","Latin_Name")], 
+                                  by = c("Latin_Name" = "Latin_Name"))
+  
+  seed_mass <- read.csv(file.path("data","Traits", "traits.csv"), header = TRUE, sep = ",")
+  seed_mass$sp <- gsub("sp.","",seed_mass$sp)
+  seed_mass$Latin_name <- str_to_title(seed_mass$Latin_name)
+  seed_mass <- seed_mass[,c(1,2,4,12)]
+  
+  
+  seed_mass_C4 <- left_join(speciesC4, seed_mass, by = c("ESPAR" = "sp"))
+  seed_mass_C4 <- seed_mass_C4[,c(-4)]
+  colnames(seed_mass_C4) <- c("code","French_name", "Latin_Name", "seed_mass_mean","genus")
+  
+  seed_mass_C32 <- left_join(speciesC32_complet,seed_mass, by = c("ESPAR" = "sp"))
+  seed_mass_C32 <- seed_mass_C32[,c("CODE","SPECIES", "Latin_Name", "Seed.mass.mean","Seed.mass.genus")]
+  colnames(seed_mass_C32) <- c("code","SPECIES", "Latin_Name", "seed_mass_mean","genus")
+  
+  return(list(seed_mass_C32,seed_mass_C4))
+}

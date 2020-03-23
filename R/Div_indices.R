@@ -2,7 +2,7 @@
 
 # function to cumputes functional diversity indices
 
-functional_ind <- function(traits = traitsC4, stem_nb =stem_nb_C4,height = Height_C4){
+functional_ind <- function(traits = traitsC4, stem_nb =stem_nb_C4,height = Height_C4, seed_mass){
   
   require(stringr)
   require(FD)
@@ -11,9 +11,13 @@ functional_ind <- function(traits = traitsC4, stem_nb =stem_nb_C4,height = Heigh
   
   if(exists("IDENTIFIANT_DU_POINT", stem_nb)){
 
-  height$SPECIES <- str_to_title(gsub("_"," ",height$SPECIES)) 
+  height$SPECIES <- str_to_title(gsub("_"," ",seed_mass$SPECIES)) 
   height_grp <- height %>% dplyr::group_by(SPECIES) %>% 
     dplyr::summarise(mean_height_genre = mean(mean_height, na.rm = TRUE))
+  
+  seed_mass$SPECIES <- str_to_title(gsub("_"," ",height$SPECIES)) 
+  seed_mass_grp <- seed_mass %>% dplyr::group_by(SPECIES) %>% 
+    dplyr::summarise(seed_mass_meangrp = mean(seed_mass_mean, na.rm = TRUE))
   
   traits$SPECIES <- str_to_title(traits$SPECIES)
   traits <- left_join(traits, height_grp[,c("SPECIES","mean_height_genre")], by = c("SPECIES" = "SPECIES"))
@@ -35,6 +39,10 @@ functional_ind <- function(traits = traitsC4, stem_nb =stem_nb_C4,height = Heigh
   height$SPECIES <- str_to_title(gsub("_"," ",height$SPECIES)) 
   height_grp <- height %>% dplyr::group_by(SPECIES) %>% 
       dplyr::summarise(mean_height_genre = mean(mean_height, na.rm = TRUE))
+  
+  seed_mass$SPECIES <- str_to_title(gsub("_"," ",seed_mass$SPECIES)) 
+  seed_mass_grp <- seed_mass %>% dplyr::group_by(SPECIES) %>% 
+    dplyr::summarise(seed_mass_meangrp = mean(seed_mass_mean, na.rm = TRUE))
     
   traits$SPECIES <- str_to_title(traits$SPECIES)
   traits <- left_join(traits, height_grp[,c("SPECIES","mean_height_genre")], by = c("SPECIES" = "SPECIES"))
@@ -59,6 +67,10 @@ functional_ind <- function(traits = traitsC4, stem_nb =stem_nb_C4,height = Heigh
   height_grp <- height %>% dplyr::group_by(Latin_Name) %>% 
     dplyr::summarise(mean_height_genre = mean(mean_height, na.rm = TRUE))
 
+  seed_mass$SPECIES <- str_to_title(gsub("_"," ",seed_mass$Latin_Name)) 
+  seed_mass_grp <- seed_mass %>% dplyr::group_by(Latin_Name) %>% 
+    dplyr::summarise(seed_mass_meangrp = mean(seed_mass_mean, na.rm = TRUE))
+  
   traits$sp <- str_to_title(traits$sp)
   traits <- left_join(traits, height_grp[,c("Latin_Name","mean_height_genre")], by = c("sp" = "Latin_Name"))
   traits_C4 <- traits[which(traits$sp %in% colnames(stem_nb)),colonneC4]
