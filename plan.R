@@ -47,7 +47,7 @@ plan <- drake_plan(
    speciesC32 = species_C3_C2(file_in(file.path("data", "IFN_ALL", "IFNCYCLE3",
                                                 "speciesnames.txt"))),
    speciesC4 = species_C4(file_in(file.path("data", "IFN_ALL", "IFNCYCLE4",
-                                            "all_species_C4.csv"))),
+                                            "all_species_C4_corrige.csv"))),
    treesC4 = trees_C4(list_all),
    treesC3 = trees_C3(file_in(file.path("data", "IFN_ALL", "IFNCYCLE3",
                                         "arbres2.txt"))),
