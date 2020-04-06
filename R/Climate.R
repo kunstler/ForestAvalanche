@@ -153,7 +153,7 @@ stack_list_clim <- function(Bio_stack, aridity, alpha, AETy){
 
   res <- raster::stack(Bio_stack, aridity, alpha, AETy)
   names(res) <- c("CHELSA_bio10_1","CHELSA_bio10_4",  "CHELSA_bio10_10",
-                  "CHELSA_bio10_11", "CHELSA_bio10_15", "CHELSA_bio10_16",
+                  "CHELSA_bio10_11","CHELSA_bio10_15", "CHELSA_bio10_16", "CHELSA_bio10_17",
                    "aridity", "alpha", "AETy")
 
   return(res)
@@ -176,7 +176,7 @@ extract_clim <- function(points, clim_stack, soil_stack){
   
  val_clim <- raster::extract(x=clim_stack,y=points) # Extraction of the values
  colnames(val_clim) <- c("Bio01", "Bio04", "Bio10", "Bio11",
-                 "Bio15", "Bio16", "aridity", "alpha", "AETy")
+                 "Bio15", "Bio16", "Bio17", "aridity", "alpha", "AETy")
  df <- cbind(data.frame(points),val_clim)
  
  val_soil <- raster::extract(x=soil_stack,y=points) # Extraction of the values
@@ -247,7 +247,7 @@ return(list(clim_IFN_C2,clim_IFN_C3))
 clim_attrib <- function(plot_IFN2_CLPA, plot_IFN3_CLPA, plot_IFN4_CLPA){
   
 
-  Bio_stack <-  extract_climatique(dir_temp = file.path("data"),file_nb = c(1,4,10,11,15,16))
+  Bio_stack <-  extract_climatique(dir_temp = file.path("data"),file_nb = c(1,4,10,11,15,16,17))
   aridity <-  download_aridity(dir_temp = file.path("data","clim_temp"))
   alpha <- download_alpha(dir_temp = file.path("data","clim_temp"))
   AETy <-  download_AETy(dir_temp = file.path("data","clim_temp"))
