@@ -105,7 +105,7 @@ taxo_ind <- function(stem_nb){
   
   if(exists("IDENTIFIANT_DU_POINT", stem_nb)){
      
-    stemnb_C2 <- stem_nb[,c(-1,-37)]
+    stemnb_C2 <- stem_nb[,c(-1,-length(stem_nb))]
     stemnb_C2 <- stemnb_C2[ order(names(stemnb_C2))]
     NAMES <- stem_nb[["IDENTIFIANT_DU_POINT"]]
     row.names(stemnb_C2) <- NAMES
@@ -116,7 +116,7 @@ taxo_ind <- function(stem_nb){
     
   }  else  if(exists("CPP", stem_nb)){
     
-    stemnb_C3 <- stem_nb[,c(-1,-32)]
+    stemnb_C3 <- stem_nb[,c(-1,-length(stem_nb))]
     stemnb_C3 <- stemnb_C3[ order(names(stemnb_C3))]
     NAMES <- stem_nb[["CPP"]]
     row.names(stemnb_C3) <- NAMES
@@ -127,7 +127,7 @@ taxo_ind <- function(stem_nb){
     
   } else if(exists("idp", stem_nb)) {
     
-    stemnb_C4 <- stem_nb[,c(-1,-57)]
+    stemnb_C4 <- stem_nb[,c(-1,-length(stem_nb))]
     stemnb_C4 <- stemnb_C4[ order(names(stemnb_C4))]
     NAMES <- stem_nb[["idp"]]
     row.names(stemnb_C4) <- NAMES
