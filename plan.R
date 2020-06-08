@@ -93,12 +93,13 @@ plan <- drake_plan(
    traits_plotC4 = traits_value(trees_plotsC4,speciesC4,traitsC4),
    height = Attrib_heigth(speciesC32,speciesC4),
    seed_mass = Attrib_seed_mass(speciesC32, speciesC4),
-   FD_C2 = functional_ind(traitsC32,stem_nb_C2, height[[1]], seed_mass[[1]]),
-   FD_C3 = functional_ind(traitsC32,stem_nb_C3, height[[1]], seed_mass[[1]]),
-   FD_C4 = functional_ind(traitsC4,stem_nb_C4, height[[2]], seed_mass[[2]]),
+   FD_C2 = functional_ind(traitsC32,basal_area_C2, height[[1]], seed_mass[[1]]),
+   FD_C3 = functional_ind(traitsC32,basal_area_C3, height[[1]], seed_mass[[1]]),
+   FD_C4 = functional_ind(traitsC4,basal_area_C4, height[[2]], seed_mass[[2]]),
    taxo_divC2 = taxo_ind(stem_nb_C2),
    taxo_divC3 = taxo_ind(stem_nb_C3),
-   taxo_divC4 = taxo_ind(stem_nb_C4)
+   taxo_divC4 = taxo_ind(stem_nb_C4),
+   final_data_C4 = data_analyse_C4(FD_C4,plotsC4,traits_plotC4,taxo_divC4, list_all)
    )
 
 # Make plan
