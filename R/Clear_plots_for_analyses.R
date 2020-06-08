@@ -132,7 +132,7 @@ plot_clean <- function(plot_IFN_CLPA, selected_trees, species, clim_var){
     
     #compilation
     idp_to_excl_C4 <- c(to_exclude_C4,to_exclude_C4_clpa,to_exclude_C4_age,to_exclude_trees)
-    # elimination of potential duplicatation
+    # elimination of potentiel duplicatation
     idp_to_excl_C4 <-  idp_to_excl_C4[!duplicated(idp_to_excl_C4)==TRUE]
     
     #compilation of mean age, avalanche path and climatique variables for selected plots
@@ -142,7 +142,10 @@ plot_clean <- function(plot_IFN_CLPA, selected_trees, species, clim_var){
     
     plots_C4_age_ava_path$classe_age <- cut(plots_C4_age_ava_path$mean_age, seq(0,580,by = 20))
     
-    plot_return <- plots_C4_age_ava_path
+    plotsC4_NA_traits <- subset(plots_C4_age_ava_path,plots_C4_age_ava_path$idp != c("433625"))
+    plotsC4_selected <- subset(plotsC4_NA_traits,plotsC4_NA_traits$idp != c("723623"))
+    
+    plot_return <- plotsC4_selected
     
   }
   
