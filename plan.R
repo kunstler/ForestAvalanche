@@ -99,7 +99,14 @@ plan <- drake_plan(
    taxo_divC2 = taxo_ind(stem_nb_C2),
    taxo_divC3 = taxo_ind(stem_nb_C3),
    taxo_divC4 = taxo_ind(stem_nb_C4),
-   final_data_C4 = data_analyse_C4(FD_C4,plotsC4,traits_plotC4,taxo_divC4, list_all)
+   final_data_C4 = data_analyse_C4(FD_C4,plotsC4,traits_plotC4,taxo_divC4, list_all),
+   figure_rich_shann_C4 = Figure_rich_shann_C4(final_data_C4),
+   figure_SLA_SM_C4 = Figure_SLA_SM_C4(final_data_C4),
+   figure_Hmax_WD_C4 = Figure_Hmax_WD_C4(final_data_C4),
+   Paper = rmarkdown::render(
+      knitr_in("Article.Rmd"),
+      output_file = file_out("Article.pdf"),
+      quiet = TRUE)
    )
 
 # Make plan
