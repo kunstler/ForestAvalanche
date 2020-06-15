@@ -38,9 +38,10 @@ require(sp)
 
 ```{r, results="hide", echo=FALSE, message=FALSE}
 library(drake)
-loadd(figure_rich_shann_C4)
-loadd(figure_SLA_SM_C4)
-loadd(figure_Hmax_WD_C4)
+loadd(figure_rich_shann_C4,figure_SLA_SM_C4,figure_Hmax_WD_C4,figure_annexe)
+plot_G <- figure_annexe[[1]]
+plot_dG <- figure_annexe[[2]]
+plot_st_nb <- figure_annexe[[3]]
 ```
 
 ## Figure.1
@@ -58,4 +59,23 @@ figure_SLA_SM_C4
 ```{r}
 figure_Hmax_WD_C4
 ```
+
+# ANNEXES
+
+## Annexe.1
+```{r}
+plot_G
+```
+
+## Annexe.2
+```{r}
+plot_dG
+```
+
+## Annexe.3
+```{r}
+plot_st_nb
+```
+
+
 
