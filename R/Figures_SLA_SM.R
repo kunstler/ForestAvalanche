@@ -90,7 +90,7 @@ Figure_SLA_SM_C4 <- function(data = final_data_C4){
   
   ##SLA
   pred_SLA_1000_IN <- predict(SLA_log_normale, newdata = data_1000_IN, type = c("response"))
-  data_1000_IN$predited_value <- pred_SLA_1000_IN
+  data_1000_IN$predicted_value <- pred_SLA_1000_IN
   
   # pour le calcul des intervals de confiance :
   preds <- predict(SLA_log_normale, newdata = data_1000_IN, type = c("link"), se.fit =TRUE)
@@ -113,12 +113,12 @@ Figure_SLA_SM_C4 <- function(data = final_data_C4){
   data_1000_IN$altitude <- 1000
   
   # plot
-  SLA_1000_in <-ggplot(data=data_1000_IN, mapping=aes(x=mean_age ,y=predited_value))  + xlim(0,600) + ylim(0,5)+  geom_point(size = 0.7) +
+  SLA_1000_in <-ggplot(data=data_1000_IN, mapping=aes(x=mean_age ,y=predicted_value))  + xlim(0,600) + ylim(0,5)+  geom_point(size = 0.7) +
     geom_line(data=data_1000_IN, mapping=aes(x=mean_age, y=upr), col="red") + 
     geom_line(data=data_1000_IN, mapping=aes(x=mean_age, y=lwr), col="red") 
   
   pred_SLA_1000_OUT <- predict(SLA_log_normale, newdata = data_1000_OUT, type = c("response"))
-  data_1000_OUT$predited_value <- pred_SLA_1000_OUT
+  data_1000_OUT$predicted_value <- pred_SLA_1000_OUT
   
   # pour le calcul des intervals de confiance :
   preds <- predict(SLA_log_normale, newdata = data_1000_OUT, type = c("link"), se.fit =TRUE)
@@ -141,7 +141,7 @@ Figure_SLA_SM_C4 <- function(data = final_data_C4){
   data_1000_OUT$altitude <- 1000
   
   pred_SLA_1700_IN <- predict(SLA_log_normale, newdata = data_1700_IN, type = c("response"))
-  data_1700_IN$predited_value <- pred_SLA_1700_IN
+  data_1700_IN$predicted_value <- pred_SLA_1700_IN
   
   # pour le calcul des intervals de confiance :
   preds <- predict(SLA_log_normale, newdata = data_1700_IN, type = c("link"), se.fit =TRUE)
@@ -164,7 +164,7 @@ Figure_SLA_SM_C4 <- function(data = final_data_C4){
   data_1700_IN$altitude <- 1700
   
   pred_SLA_1700_OUT <- predict(SLA_log_normale, newdata = data_1700_OUT, type = c("response"))
-  data_1700_OUT$predited_value <- pred_SLA_1700_OUT
+  data_1700_OUT$predicted_value <- pred_SLA_1700_OUT
   
   # pour le calcul des intervals de confiance :
   preds <- predict(SLA_log_normale, newdata = data_1700_OUT, type = c("link"), se.fit =TRUE)
@@ -197,7 +197,7 @@ Figure_SLA_SM_C4 <- function(data = final_data_C4){
   
 ## SM
   pred_seed_mass_1000_IN <- predict(seed_mass_log_normale, newdata = data_1000_IN, type = c("response"))
-  data_1000_IN$predited_value <- pred_seed_mass_1000_IN
+  data_1000_IN$predicted_value <- pred_seed_mass_1000_IN
   
   # pour le calcul des intervals de confiance :
   preds <- predict(seed_mass_log_normale, newdata = data_1000_IN, type = c("link"), se.fit =TRUE)
@@ -220,7 +220,7 @@ Figure_SLA_SM_C4 <- function(data = final_data_C4){
   data_1000_IN$altitude <- 1000
   
   pred_seed_mass_1000_OUT <- predict(seed_mass_log_normale, newdata = data_1000_OUT, type = c("response"))
-  data_1000_OUT$predited_value <- pred_seed_mass_1000_OUT
+  data_1000_OUT$predicted_value <- pred_seed_mass_1000_OUT
   
   # pour le calcul des intervals de confiance :
   preds <- predict(seed_mass_log_normale, newdata = data_1000_OUT, type = c("link"), se.fit =TRUE)
@@ -243,7 +243,7 @@ Figure_SLA_SM_C4 <- function(data = final_data_C4){
   data_1000_OUT$altitude <- 1000
   
   pred_seed_mass_1700_IN <- predict(seed_mass_log_normale, newdata = data_1700_IN, type = c("response"))
-  data_1700_IN$predited_value <- pred_seed_mass_1700_IN
+  data_1700_IN$predicted_value <- pred_seed_mass_1700_IN
   
   # pour le calcul des intervals de confiance :
   preds <- predict(seed_mass_log_normale, newdata = data_1700_IN, type = c("link"), se.fit =TRUE)
@@ -266,7 +266,7 @@ Figure_SLA_SM_C4 <- function(data = final_data_C4){
   data_1700_IN$altitude <- 1700
   
   pred_seed_mass_1700_OUT <- predict(seed_mass_log_normale, newdata = data_1700_OUT, type = c("response"))
-  data_1700_OUT$predited_value <- pred_seed_mass_1700_OUT
+  data_1700_OUT$predicted_value <- pred_seed_mass_1700_OUT
   
   # pour le calcul des intervals de confiance :
   preds <- predict(seed_mass_log_normale, newdata = data_1700_OUT, type = c("link"), se.fit =TRUE)
@@ -300,7 +300,7 @@ Figure_SLA_SM_C4 <- function(data = final_data_C4){
   
   complet <- bind_rows(SLA,SM)
   
-  plot_SLA_SM <- ggplot(data=complet, mapping=aes(x=mean_age ,y=predited_value,  group = avalanche_path, colour = avalanche_path)) + geom_point( size = 0.7)  + 
+  plot_SLA_SM <- ggplot(data=complet, mapping=aes(x=mean_age ,y=predicted_value,  group = avalanche_path, colour = avalanche_path)) + geom_point( size = 0.7)  + 
     theme_bw() + theme(legend.position="bottom", legend.box = "horizontal",plot.title = element_text(hjust = 0.5)) +
     labs(color= "Avalanche", x ="Age") + scale_color_manual(labels = c("IN", "OUT"), values = c("red3", "darkblue")) +
     geom_line(data=complet[which(complet$avalanche_path == "IN"),], mapping=aes(x=mean_age, y=upr), col="red", linetype = "longdash") + 
