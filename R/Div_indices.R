@@ -1,7 +1,9 @@
 
 # function to cumputes functional diversity indices
 
-functional_ind <- function(traits = traitsC4, basal_area = basal_area_C4, height = height[[1]] , seed_mass = seed_mass[[1]]){
+##loadd(traitsC4, basal_area_C4, height ,seed_mass)
+
+functional_ind <- function(traits, basal_area , height, seed_mass){
   
   require(stringr)
   require(FD)
@@ -61,7 +63,7 @@ functional_ind <- function(traits = traitsC4, basal_area = basal_area_C4, height
     row.names(basal_area_C3) <- NAMES
     
     
-    FD <- dbFD(traits_C3,basal_area_C3, corr = "lingoes")
+    FD <- dbFD(traits_C3,basal_area_C3, corr = "lingoes", calc.FRic = FALSE, calc.FGR = FALSE, calc.FDiv = FALSE)
     
   } else if(exists("idp", basal_area)) {
     
@@ -105,7 +107,6 @@ functional_ind <- function(traits = traitsC4, basal_area = basal_area_C4, height
   return(FD)
   
 }
-
 
 
 taxo_ind <- function(stem_nb){

@@ -58,12 +58,8 @@ plan <- drake_plan(
                                    chave, zanne, choat),
    traitsC32 = extract_public_traitC32(spvecC32, wright2004, wright2017, maire,
                                       chave, zanne, choat, speciesC32),
-   treesCLPA_C2 = trees_CLPA_C2(treesC2,plot_IFN2_CLPA),
-   treesCLPA_C3 = trees_CLPA_C3(treesC3,plot_IFN3_CLPA),
    treesCLPA_C4 = trees_CLPA_C4(treesC4,plot_IFN4_CLPA),
    clim_var = clim_attrib(plot_IFN2_CLPA,plot_IFN3_CLPA,plot_IFN4_CLPA),
-   plotsC2 = plot_clean(plot_IFN2_CLPA,treesCLPA_C2,speciesC32,clim_var),
-   plotsC3 = plot_clean(plot_IFN3_CLPA,treesCLPA_C3,speciesC32,clim_var),
    plotsC4 = plot_clean(plot_IFN4_CLPA,treesCLPA_C4,speciesC4,clim_var),
    
    trees_plotsC4 = treesCLPA_C4[treesCLPA_C4$idp %in% plotsC4$idp,],
@@ -78,6 +74,7 @@ plan <- drake_plan(
    taxo_divC4 = taxo_ind(stem_nb_C4),
    
    final_data_C4 = data_analyse_C4(FD_C4,plotsC4,traits_plotC4,taxo_divC4, list_all),
+   FDis_traits_C4 = functional_dispersion(final_data_C4, basal_area_C4, traits_plotC4, height, seed_mass),
    
    figure_rich_shann_C4 = Figure_rich_shann_C4(final_data_C4),
    figure_SLA_SM_C4 = Figure_SLA_SM_C4(final_data_C4),
