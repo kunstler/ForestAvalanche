@@ -111,7 +111,7 @@ Attrib_heigth <- function(speciesC32, speciesC4){
   speciesC32_complet <- left_join(speciesC32,speciesC4[,c("ESPAR","Latin_Name")], 
                                   by = c("Latin_Name" = "Latin_Name"))
   
-  height <- read.csv(file.path("data", "max_height.csv"), header = TRUE, sep = ",")
+  height <- read.csv(file.path("data", "Traits","max_height.csv"), header = TRUE, sep = ",")
   height$sp <- gsub("sp.","",height$sp)
   
   Height_C4 <- left_join(speciesC4, height, by = c("ESPAR" = "sp"))
