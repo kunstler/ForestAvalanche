@@ -1,4 +1,4 @@
-Figure_SLA_SM_C4 <- function(data = final_data_C4){
+Fig_SLA_SM_C4 <- function(data = final_data_C4){
 
   require(drake)
   require(dplyr)

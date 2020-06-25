@@ -15,7 +15,7 @@ This R cran code require the package `drake`.
 In addition the following packages are required:
 
 ```
-require(rgdal, rgeos, sp, stringr, readxl, tidyr, dplyr, drake, raster, FD, ggplot2, reshape2, data.table, RColorBrewer, ggfortify)
+lapply(c("rgdal", "rgeos", "sp", "stringr", "readxl", "tidyr", "dplyr", "drake","raster", "FD", "ggplot2", "reshape2", "data.table", "RColorBrewer", "ggfortify"),require)
 
 ```
 
@@ -33,7 +33,7 @@ require(rgdal, rgeos, sp, stringr, readxl, tidyr, dplyr, drake, raster, FD, ggpl
  * Unzip "chelsa_climatologies.zip".
  * The folder `AlpesPyr` contains CLPA shapes.
  * The folder `chelsa_climatologies` contains data used to unclude environnemental conditions in our generalised linear models.
- * The folder `clim_temp` contains data used to unclude environnemental conditions in our generalised linear models.
+ * The folder `clim_temp` contains data used to include environnemental conditions in our generalised linear models.
  * The folder `France_Entiere` contains Modèle Numerique de Terrain (MNT) at France scale
  * The folder `IFN_ALL` contains IFN data used for cycles 2 3 and 4.
  * The folder `merged` contains shapes assigning each IFN plot to a CLPA category of cycle 4.

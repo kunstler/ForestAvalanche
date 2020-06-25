@@ -1,4 +1,4 @@
-Figure_Hmax_WD_C4 <- function(data = final_data_C4){
+Fig_Hmax_WD_C4 <- function(data = final_data_C4){
 
   require(drake)
   require(dplyr)

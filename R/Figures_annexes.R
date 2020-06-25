@@ -1,4 +1,4 @@
-Figure_annexe <- function(final_data_C4, basal_area_C4, DQ_C4, traits_plotC4, stem_nb_C4){
+Fig_annexe <- function(final_data_C4, basal_area_C4, DQ_C4, traits_plotC4, stem_nb_C4){
   
   require(drake)
   require(dplyr)
@@ -14,24 +14,23 @@ Figure_annexe <- function(final_data_C4, basal_area_C4, DQ_C4, traits_plotC4, st
   test <- left_join(full_var_C4,basal_area_C4[,c("idp","basal_area_tot")], by = "idp")
   test <- left_join(test, DQ_C4, by ="idp")
   test <- left_join(test, stem_nb_C4[,c("idp","stem_nb_tot")], by ="idp")
-  
   plot_G_age <- ggplot(test, aes(mean_age,basal_area_tot)) 
   smooth_G_age <- plot_G_age + geom_point(data = test ,aes(mean_age, basal_area_tot, group = avalanche_path, colour = avalanche_path), pch = 16, cex = 1)  +
-    geom_smooth(data = test, mapping = aes(mean_age, basal_area_tot, group = avalanche_path, colour = avalanche_path), method = NULL, na.rm = TRUE, span = 1) +
+    geom_smooth(data = test, mapping = aes(mean_age, basal_area_tot, group = avalanche_path, colour = avalanche_path), na.rm = TRUE, span = 1) +
     theme_bw() + theme(legend.position="bottom", legend.box = "horizontal",plot.title = element_text(hjust = 0.5)) + labs(color= "Avalanche", x ="Age", y = "Basal area") +
     scale_color_manual(labels = c("IN", "OUT"), values = c("red3", "darkblue"))
   
   
   plot_dG_age <- ggplot(test, aes(mean_age,RMS_diam)) 
   smooth_dG_age <- plot_dG_age + geom_point(data = test ,aes(mean_age, RMS_diam, group = avalanche_path, colour = avalanche_path), pch = 16, cex = 1)  +
-    geom_smooth(data = test, mapping = aes(mean_age, RMS_diam, group = avalanche_path, colour = avalanche_path), method = NULL, na.rm = TRUE, span = 1) +
+    geom_smooth(data = test, mapping = aes(mean_age, RMS_diam, group = avalanche_path, colour = avalanche_path),  na.rm = TRUE, span = 1) +
     theme_bw() + theme(legend.position="bottom", legend.box = "horizontal",plot.title = element_text(hjust = 0.5)) + labs(color= "Avalanche", x ="Age", y = "Root mean square diameter") +
     scale_color_manual(labels = c("IN", "OUT"), values = c("red3", "darkblue"))
  
   
   plot_stem_nb_age <- ggplot(test, aes(mean_age,stem_nb_tot)) 
   smooth_stem_nb_age <- plot_stem_nb_age + geom_point(data = test ,aes(mean_age, stem_nb_tot, group = avalanche_path, colour = avalanche_path), pch = 16, cex = 1)  +
-    geom_smooth(data = test, mapping = aes(mean_age, stem_nb_tot, group = avalanche_path, colour = avalanche_path), method = NULL, na.rm = TRUE, span = 1) +
+    geom_smooth(data = test, mapping = aes(mean_age, stem_nb_tot, group = avalanche_path, colour = avalanche_path), na.rm = TRUE, span = 1) +
     theme_bw() + theme(legend.position="bottom", legend.box = "horizontal",plot.title = element_text(hjust = 0.5)) + labs(color= "Avalanche", x ="Age", y = "Stem number") +
     scale_color_manual(labels = c("IN", "OUT"), values = c("red3", "darkblue"))
   

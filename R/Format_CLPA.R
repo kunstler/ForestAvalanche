@@ -4,13 +4,14 @@ format_cycle4_CLPA <- function(list_all,
                              path = file.path("data",
                                               "extracted_clpa_FM.csv")){
   df_all <- list_all$placette
-  df_all_yr <- dplyr::filter(df_all, annee %in% 5:15)
-  df_extract <- read.csv(file.path("data", "extracted_clpa_FM.csv"),
+  df_all_yr <- dplyr::filter(df_all, annee %in% 5:18)
+  df_extract <- read.csv(path,
                          sep = ";")
   # merge with all to get X Y
   df_extract <- dplyr::left_join(df_extract,
                                  as.data.frame(df_all_yr),
                                  by = "idp")
+  df_extract <- df_extract[!is.na(df_extract$xl93), ]
   return(df_extract)
 }
 

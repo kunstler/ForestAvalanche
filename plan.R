@@ -10,6 +10,18 @@ require(stringr)
 require(readxl)
 require(dplyr)
 require(drake)
+require(hillR)
+require(tidyr)
+require(raster)
+require(FD)
+require(ggplot2)
+require(reshape2)
+require(data.table)
+require(RColorBrewer)
+require(ggfortify)
+
+library(drake)
+
 
 # source all files
 lapply(grep("R$", list.files("R"), value = TRUE), function(x) source(file.path("R", x)))
@@ -33,7 +45,7 @@ plan <- drake_plan(
    linpi = readOGR(dsn = file.path("data", "merged"), layer = "CLPA_linpi_L93_Good"),
    list_all = read_french_NFI(file.path("data", "IFN_ALL", "IFNCYCLE4")),
    plot_IFN4_CLPA = format_cycle4_CLPA(list_all,
-                                  file_in(file.path("data",
+                                  path = file_in(file.path("data",
                                                     "extracted_clpa_2020.csv"))),
    plot_IFN3_CLPA = format_cycle3_CLPA(zetude, zont, lint, zonpi, linpi, wzon,
                    file_plot = file_in(file.path("data", "IFN_ALL",
@@ -76,10 +88,10 @@ plan <- drake_plan(
    final_data_C4 = data_analyse_C4(FD_C4,plotsC4,traits_plotC4,taxo_divC4, list_all),
    FDis_traits_C4 = functional_dispersion(final_data_C4, basal_area_C4, traits_plotC4, height, seed_mass),
    
-   figure_rich_shann_C4 = Figure_rich_shann_C4(final_data_C4),
-   figure_SLA_SM_C4 = Figure_SLA_SM_C4(final_data_C4),
-   figure_Hmax_WD_C4 = Figure_Hmax_WD_C4(final_data_C4),
-   figure_annexe = Figure_annexe(final_data_C4, basal_area_C4, DQ_C4, traits_plotC4, stem_nb_C4),
+   figure_rich_shann_C4 = Fig_rich_shann_C4(final_data_C4),
+   figure_SLA_SM_C4 = Fig_SLA_SM_C4(final_data_C4),
+   figure_Hmax_WD_C4 = Fig_Hmax_WD_C4(final_data_C4),
+   figure_annexe = Fig_annexe(final_data_C4, basal_area_C4, DQ_C4, traits_plotC4, stem_nb_C4),
    table_annexe = annexe_table(final_data_C4),
    Paper = rmarkdown::render(
       knitr_in("Article.Rmd"),

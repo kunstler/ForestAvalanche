@@ -1,4 +1,4 @@
-Figure_rich_shann_C4 <- function(data = final_data_C4){
+Fig_rich_shann_C4 <- function(data = final_data_C4){
 
   require(drake)
   require(dplyr)

@@ -246,30 +246,24 @@ return(list(clim_IFN_C2,clim_IFN_C3))
 
 clim_attrib <- function(plot_IFN2_CLPA, plot_IFN3_CLPA, plot_IFN4_CLPA){
   
-
   Bio_stack <-  extract_climatique(dir_temp = file.path("data"),file_nb = c(1,4,10,11,15,16,17))
   aridity <-  download_aridity(dir_temp = file.path("data","clim_temp"))
   alpha <- download_alpha(dir_temp = file.path("data","clim_temp"))
   AETy <-  download_AETy(dir_temp = file.path("data","clim_temp"))
-  
   pH <-  extract_soil(dir_temp = file.path("data","clim_temp","Soil_data"),
                     tiff_file_name = "PHIHOX_M_sl2_1km_France.tiff")
   CEC <-  extract_soil(dir_temp = file.path("data","clim_temp","Soil_data"),
                       tiff_file_name = "CECSOL_M_sl2_1km_France.tiff")
   OCC <-  extract_soil(dir_temp = file.path("data","clim_temp","Soil_data"),
                      tiff_file_name = "ORCDRC_M_sl2_1km_France.tiff")
-  
   clim_stack <-  stack_list_clim(Bio_stack, aridity, alpha, AETy)
   soil_stack <- stack_list_soil(pH, CEC, OCC)
-  
   pointsIFN_C2 <- to_latlong(plot_IFN2_CLPA)
   clim_IFN_C2 <- extract_clim(pointsIFN_C2, clim_stack, soil_stack)
   clim_IFN_C2 <- as.data.frame(clim_IFN_C2)
-  
   pointsIFN_C3 <- to_latlong(plot_IFN3_CLPA)
   clim_IFN_C3 <- extract_clim(pointsIFN_C3, clim_stack, soil_stack)
   clim_IFN_C3 <- as.data.frame(clim_IFN_C3)
-  
   pointsIFN_C4 <- to_latlong(plot_IFN4_CLPA)
   clim_IFN_C4 <- extract_clim(pointsIFN_C4, clim_stack, soil_stack)
   clim_IFN_C4 <- as.data.frame(clim_IFN_C4)
