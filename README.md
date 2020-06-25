@@ -15,12 +15,8 @@ This R cran code require the package `drake`.
 In addition the following packages are required:
 
 ```
-require(rgdal)
-require(rgeos)
-require(sp)
-require(readxl)
-require(dplyr)
-require(drake)
+require(rgdal, rgeos, sp, stringr, readxl, tidyr, dplyr, drake, raster, FD, ggplot2, reshape2, data.table, RColorBrewer, ggfortify)
+
 ```
 
 
@@ -31,5 +27,17 @@ require(drake)
  * The folder `ms` contains the file for the pdf Rmarkdown report (latex header bibliography)
 
 
+## Data
 
-
+ * Download data from dropbox.
+ * Unzip "chelsa_climatologies.zip".
+ * The folder `AlpesPyr` contains CLPA shapes.
+ * The folder `chelsa_climatologies` contains data used to unclude environnemental conditions in our generalised linear models.
+ * The folder `clim_temp` contains data used to unclude environnemental conditions in our generalised linear models.
+ * The folder `France_Entiere` contains Modèle Numerique de Terrain (MNT) at France scale
+ * The folder `IFN_ALL` contains IFN data used for cycles 2 3 and 4.
+ * The folder `merged` contains shapes assigning each IFN plot to a CLPA category of cycle 4.
+ * The folder `Traits` contains the data of functional traits studied.
+ * The file `altitudes_exactes_C4` contains the exact plot elevations of Cycle 4.
+ * The file `data_plot` contains ???
+ * The file `extracted_clpa_2020` contains CLPA category for ech Cycle 4 plots
