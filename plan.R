@@ -80,6 +80,7 @@ plan <- drake_plan(
    figure_SLA_SM_C4 = Figure_SLA_SM_C4(final_data_C4),
    figure_Hmax_WD_C4 = Figure_Hmax_WD_C4(final_data_C4),
    figure_annexe = Figure_annexe(final_data_C4, basal_area_C4, DQ_C4, traits_plotC4, stem_nb_C4),
+   table_annexe = annexe_table(final_data_C4),
    Paper = rmarkdown::render(
       knitr_in("Article.Rmd"),
       output_file = file_out("Article.pdf"),

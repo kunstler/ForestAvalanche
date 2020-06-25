@@ -60,6 +60,13 @@ figure_SLA_SM_C4
 figure_Hmax_WD_C4
 ```
 
+## Tableau.1
+
+
+## Tableau.2
+
+
+
 # ANNEXES
 
 ## Annexe.1
@@ -77,5 +84,22 @@ plot_dG
 plot_st_nb
 ```
 
+```{r, results="hide", echo=FALSE, message=FALSE}
+loadd(table_annexe)
+annexe_taxo <- table_annexe[[1]]
+annexe_traits <- table_annexe[[2]]
+```
 
+## Annexe.4 
+```{r}
+annexe_taxo
+```
+
+```{r}
+annexe_traits
+```
+
+
+
+## Annexe.5
 
